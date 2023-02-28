@@ -154,3 +154,32 @@ void destroiArvBinaria(ArvBinaria *arv)
   destroiNodoArvBinaria(arv->raiz);
   free(arv);
 }
+
+int ehDegeneradoNodoBinario(NodoABin *raiz)
+{
+  if (raiz->esq != NULL)
+  {
+    if (raiz->dir != NULL)
+      return 0;
+    else
+      return ehDegeneradoNodoBinario(raiz->esq);
+  }
+  else
+  {
+    if (raiz->dir != NULL)
+      return ehDegeneradoNodoBinario(raiz->dir);
+    else
+      return 1;
+  }
+}
+
+int ehDegeneradaArvBinaria(ArvBinaria *arv)
+{
+  if (arv->raiz == NULL)
+    return 0;
+  if (arv->raiz->esq == NULL && arv->raiz->dir == NULL)
+    return 0;
+  return ehDegeneradoNodoBinario(arv->raiz);
+}
+
+int verificaProfundidadeArvBinaria(ArvBinaria *arv) {}

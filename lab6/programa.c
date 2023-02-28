@@ -28,10 +28,12 @@ int main()
   Info infoAux = buscaInfoArvBinaria(arv, 4); // infoAux.chave = 4
   infoAux = buscaInfoArvBinaria(arv, 8);      // infoAux.chave = -1
 
-  removeInfoArvBinaria(arv, 2); // chave = 2 eh nodo de derivacao
+  // removeInfoArvBinaria(arv, 2); // chave = 2 eh nodo de derivacao
   removeInfoArvBinaria(arv, 5); // chave = 2 eh nodo folha
 
   imprimeIndentadoArvBinaria(arv);
+
+  printf("Degenerada: %d\n", ehDegeneradaArvBinaria(arv));
 
   destroiArvBinaria(arv);
   return 0;

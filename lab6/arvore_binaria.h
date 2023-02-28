@@ -46,4 +46,6 @@ void destroiArvBinaria(ArvBinaria *arv);
 // Funcao que imprime uma arvore
 void imprimeIndentadoArvBinaria(ArvBinaria *arv);
 
+// Funcao que retorna 1 se a arvore eh degenerada e 0 caso contrario
+int ehDegeneradaArvBinaria(ArvBinaria *arv);
 #endif
