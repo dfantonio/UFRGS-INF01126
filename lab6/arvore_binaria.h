@@ -48,4 +48,8 @@ void imprimeIndentadoArvBinaria(ArvBinaria *arv);
 
 // Funcao que retorna 1 se a arvore eh degenerada e 0 caso contrario
 int ehDegeneradaArvBinaria(ArvBinaria *arv);
+
+// Funcao que retorna a profundidade de uma arvore
+int verificaProfundidadeArvBinaria(ArvBinaria *arv);
+
 #endif

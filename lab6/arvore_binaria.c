@@ -182,4 +182,23 @@ int ehDegeneradaArvBinaria(ArvBinaria *arv)
   return ehDegeneradoNodoBinario(arv->raiz);
 }
 
-int verificaProfundidadeArvBinaria(ArvBinaria *arv) {}
+int verificaProfundidadeNodoBinario(NodoABin *raiz)
+{
+  if (raiz == NULL)
+    return 0;
+
+  int a = verificaProfundidadeNodoBinario(raiz->esq);
+  int b = verificaProfundidadeNodoBinario(raiz->dir);
+
+  if (a > b)
+    return 1 + a;
+  return 1 + b;
+}
+
+int verificaProfundidadeArvBinaria(ArvBinaria *arv)
+{
+  if (arv->raiz == NULL)
+    return 0;
+
+  return verificaProfundidadeNodoBinario(arv->raiz);
+}
