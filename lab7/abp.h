@@ -51,4 +51,6 @@ int minimoABP(ABP *arv);
 
 int maximoABP(ABP *arv);
 
+void imprimeReverso(ABP *arv);
+
 #endif

@@ -33,6 +33,8 @@ int main()
   printf("\n\n Maximo: %d\n", maximoABP(arv));
   printf("\n\n Minimo: %d\n", minimoABP(arv));
 
+  imprimeReverso(arv);
+
   destroiABP(arv);
   return 0;
 }

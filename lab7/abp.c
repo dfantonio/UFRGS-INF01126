@@ -196,3 +196,23 @@ int maximoABP(ABP *arv)
 
   return maximo;
 }
+
+// Funcao auxiliar para imprimir uma ABP
+void imprimeNodoReverso(NodoABin *raiz)
+{
+  if (raiz != NULL)
+  {
+    imprimeNodoReverso(raiz->dir);
+    printf("%d | %s (%s)\n", raiz->info.chave,
+           raiz->info.nome,
+           raiz->info.email);
+    imprimeNodoReverso(raiz->esq);
+  }
+}
+
+void imprimeReverso(ABP *arv)
+{
+  printf("-----------------------------------------\n");
+  imprimeNodoReverso(arv->raiz);
+  printf("\n-----------------------------------------\n");
+}
