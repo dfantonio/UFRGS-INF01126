@@ -41,7 +41,8 @@ static void UpdateDrawFrame(void); // Update and draw one frame
 //----------------------------------------------------------------------------------
 // Main entry point
 //----------------------------------------------------------------------------------
-int main() {
+int main()
+{
   // Initialization
   //--------------------------------------------------------------------------------------
   const int screenWidth = 800;
@@ -55,8 +56,8 @@ int main() {
   camera.fovy = 60.0f;
   camera.projection = CAMERA_PERSPECTIVE;
 
-  teste();
-  blaaa();
+  // teste();
+  // blaaa();
 
   SetCameraMode(camera, CAMERA_ORBITAL);
 
@@ -84,7 +85,8 @@ int main() {
 }
 
 // Update and draw game frame
-static void UpdateDrawFrame(void) {
+static void UpdateDrawFrame(void)
+{
   // Update
   //----------------------------------------------------------------------------------
   UpdateCamera(&camera);
