@@ -47,33 +47,30 @@ int main() {
   const int screenWidth = 800;
   const int screenHeight = 450;
 
-  InitWindow(screenWidth, screenHeight, "raylib");
+  InitWindow(screenWidth, screenHeight, "Jogo de paciência");
 
-  camera.position = (Vector3){10.0f, 10.0f, 8.0f};
-  camera.target = (Vector3){0.0f, 0.0f, 0.0f};
-  camera.up = (Vector3){0.0f, 1.0f, 0.0f};
-  camera.fovy = 60.0f;
-  camera.projection = CAMERA_PERSPECTIVE;
+  Texture2D cartas = LoadTexture("resources/playingCards.png");
+
+  int frameWidth = 150;  // Sprite one frame rectangle width
+  int frameHeight = 200; // Sprite one frame rectangle height
+  int currentFrame = 0;
+  int currentLine = 0;
+
+  Rectangle coordDaCarta = {0, 0, frameWidth, frameHeight};
+  Vector2 position = {150, 150};
 
   teste();
   blaaa();
 
-  SetCameraMode(camera, CAMERA_ORBITAL);
-
-  //--------------------------------------------------------------------------------------
-
-#if defined(PLATFORM_WEB)
-  emscripten_set_main_loop(UpdateDrawFrame, 60, 1);
-#else
   SetTargetFPS(60); // Set our game to run at 60 frames-per-second
-  //--------------------------------------------------------------------------------------
 
   // Main game loop
   while (!WindowShouldClose()) // Detect window close button or ESC key
   {
     UpdateDrawFrame();
+
+    DrawTextureRec(cartas, coordDaCarta, position, WHITE);
   }
-#endif
 
   // De-Initialization
   //--------------------------------------------------------------------------------------
@@ -94,17 +91,10 @@ static void UpdateDrawFrame(void) {
   //----------------------------------------------------------------------------------
   BeginDrawing();
 
-  ClearBackground(RAYWHITE);
+  // ClearBackground(RAYWHITE);
+  ClearBackground(DARKBLUE);
 
-  BeginMode3D(camera);
-
-  DrawCube(cubePosition, 2.0f, 2.0f, 2.0f, RED);
-  DrawCubeWires(cubePosition, 2.0f, 2.0f, 2.0f, MAROON);
-  DrawGrid(10, 1.0f);
-
-  EndMode3D();
-
-  DrawText("This is a raylib TESTEEEE", 10, 40, 20, DARKGRAY);
+  DrawText("This is a raylib TESTEEEE", 10, 40, 20, WHITE);
 
   DrawFPS(10, 10);
 

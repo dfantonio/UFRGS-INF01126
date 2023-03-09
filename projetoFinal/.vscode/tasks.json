@@ -23,12 +23,9 @@
         ]
       },
       "osx": {
-        "args": [
-          "RAYLIB_PATH=<path_to_raylib>/raylib",
-          "PROJECT_NAME=${fileBasenameNoExtension}",
-          "OBJS=${fileBasenameNoExtension}.c",
-          "BUILD_MODE=DEBUG"
-        ]
+        "type": "shell",
+        "command": "cc ${fileBasename} -Iinclude ./include/*.c `pkg-config --libs --cflags raylib` -o ${fileBasenameNoExtension}",
+        "args": []
       },
       "group": {
         "kind": "build",
@@ -54,11 +51,9 @@
         ]
       },
       "osx": {
-        "args": [
-          "RAYLIB_PATH=<path_to_raylib>/raylib",
-          "PROJECT_NAME=${fileBasenameNoExtension}",
-          "OBJS=${fileBasenameNoExtension}.c"
-        ]
+        "type": "shell",
+        "command": "cc ${fileBasename} -Iinclude ./include/*.c `pkg-config --libs --cflags raylib` -o ${fileBasenameNoExtension}",
+        "args": []
       },
       "group": "build",
       "problemMatcher": ["$gcc"]
