@@ -1,49 +1,11 @@
-/*******************************************************************************************
- *
- *   raylib [core] example - Basic 3d example
- *
- *   Welcome to raylib!
- *
- *   To compile example, just press F5.
- *   Note that compiled executable is placed in the same folder as .c file
- *
- *   You can find all basic examples on C:\raylib\raylib\examples folder or
- *   raylib official webpage: www.raylib.com
- *
- *   Enjoy using raylib. :)
- *
- *   This example has been created using raylib 1.0 (www.raylib.com)
- *   raylib is licensed under an unmodified zlib/libpng license (View raylib.h for details)
- *
- *   Copyright (c) 2013-2023 Ramon Santamaria (@raysan5)
- *
- ********************************************************************************************/
-
 #include "raylib.h"
+#include "raymath.h"
 #include "tad.h"
 #include "teste2.h"
 
-#if defined(PLATFORM_WEB)
-#include <emscripten/emscripten.h>
-#endif
-
-//----------------------------------------------------------------------------------
-// Local Variables Definition (local to this module)
-//----------------------------------------------------------------------------------
-Camera camera = {0};
-Vector3 cubePosition = {0};
-
-//----------------------------------------------------------------------------------
-// Local Functions Declaration
-//----------------------------------------------------------------------------------
 static void UpdateDrawFrame(void); // Update and draw one frame
 
-//----------------------------------------------------------------------------------
-// Main entry point
-//----------------------------------------------------------------------------------
 int main() {
-  // Initialization
-  //--------------------------------------------------------------------------------------
   const int screenWidth = 800;
   const int screenHeight = 450;
 
@@ -53,23 +15,64 @@ int main() {
 
   int frameWidth = 150;  // Sprite one frame rectangle width
   int frameHeight = 200; // Sprite one frame rectangle height
-  int currentFrame = 0;
-  int currentLine = 0;
 
-  Rectangle coordDaCarta = {0, 0, frameWidth, frameHeight};
-  Vector2 position = {150, 150};
+  Rectangle spriteDaCarta = {frameWidth * 0, 0, frameWidth, frameHeight};
+  Vector2 posicaoDaCarta = {150, 150};
+  Vector2 mouseOffsetOnClick = {0, 0};
+
+  Rectangle testeCoords = {posicaoDaCarta.x, posicaoDaCarta.y, frameWidth, frameHeight};
+  bool isMousePressed = false;
 
   teste();
   blaaa();
 
   SetTargetFPS(60); // Set our game to run at 60 frames-per-second
 
+  Vector2 mousePos;
+
   // Main game loop
   while (!WindowShouldClose()) // Detect window close button or ESC key
   {
-    UpdateDrawFrame();
+    BeginDrawing();
 
-    DrawTextureRec(cartas, coordDaCarta, position, WHITE);
+    UpdateDrawFrame();
+    DrawTextureRec(cartas, spriteDaCarta, posicaoDaCarta, WHITE);
+
+    // Comecei a brincar com arrastar cartas
+    mousePos = GetMousePosition();
+
+    testeCoords.x = posicaoDaCarta.x;
+    testeCoords.y = posicaoDaCarta.y;
+
+    if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
+      if (isMousePressed || CheckCollisionPointRec(mousePos, testeCoords)) {
+
+        // Caso o clique tenha sido recem pressionado, vamos calcular o offset do mouse em relação ao canto superior esquerdo
+        if (mouseOffsetOnClick.x == 0) {
+          mouseOffsetOnClick.x = GetMouseX() - posicaoDaCarta.x;
+          mouseOffsetOnClick.y = GetMouseY() - posicaoDaCarta.y;
+
+          isMousePressed = true; // Também define q o mouse está pressionado. Isso serve pra quando tu desliza o mouse mto rápido e ele "sai" da carta
+        }
+
+        posicaoDaCarta.x = GetMouseX() - mouseOffsetOnClick.x;
+        posicaoDaCarta.y = GetMouseY() - mouseOffsetOnClick.y;
+      }
+    }
+
+    // Se o mouse for solto reseto o offset
+    if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
+      mouseOffsetOnClick = Vector2Zero();
+      isMousePressed = false;
+    }
+
+    // Se apertar R reseta a coordenada da carta
+    if (IsKeyPressed(KEY_R)) {
+      posicaoDaCarta.x = 150;
+      posicaoDaCarta.y = 150;
+    }
+
+    EndDrawing();
   }
 
   // De-Initialization
@@ -82,22 +85,5 @@ int main() {
 
 // Update and draw game frame
 static void UpdateDrawFrame(void) {
-  // Update
-  //----------------------------------------------------------------------------------
-  UpdateCamera(&camera);
-  //----------------------------------------------------------------------------------
-
-  // Draw
-  //----------------------------------------------------------------------------------
-  BeginDrawing();
-
-  // ClearBackground(RAYWHITE);
   ClearBackground(DARKBLUE);
-
-  DrawText("This is a raylib TESTEEEE", 10, 40, 20, WHITE);
-
-  DrawFPS(10, 10);
-
-  EndDrawing();
-  //----------------------------------------------------------------------------------
 }
