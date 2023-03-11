@@ -1,7 +1,7 @@
+#include "carta.h"
 #include "raylib.h"
 #include "raymath.h"
 #include "tad.h"
-#include "teste2.h"
 
 static void UpdateDrawFrame(void); // Update and draw one frame
 
@@ -23,16 +23,15 @@ int main() {
   Rectangle testeCoords = {posicaoDaCarta.x, posicaoDaCarta.y, frameWidth, frameHeight};
   bool isMousePressed = false;
 
-  teste();
-  blaaa();
-
   SetTargetFPS(60); // Set our game to run at 60 frames-per-second
 
   Vector2 mousePos;
 
-  // Main game loop
-  while (!WindowShouldClose()) // Detect window close button or ESC key
-  {
+  // Cria estrutura das cartas
+  ListaGEnc *listaCartas = criaBaralho();
+  percorreBaralho(listaCartas);
+
+  while (!WindowShouldClose()) {
     BeginDrawing();
 
     UpdateDrawFrame();
