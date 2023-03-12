@@ -10,6 +10,6 @@
   },
   "files.associations": {
     "raylib.h": "c",
-    "tad.h": "c"
+    "*.h": "c"
   }
 }

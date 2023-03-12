@@ -10,21 +10,21 @@
       "args": [
         "PLATFORM=PLATFORM_DESKTOP",
         "BUILD_MODE=DEBUG",
-        "PROJECT_NAME=${fileBasenameNoExtension}",
-        "OBJS=${fileBasenameNoExtension}.c"
+        "PROJECT_NAME=main",
+        "OBJS=main.c"
       ],
       "windows": {
         "command": "mingw32-make.exe",
         "args": [
           "RAYLIB_PATH=C:/raylib/raylib",
-          "PROJECT_NAME=${fileBasenameNoExtension}",
-          "OBJS=${fileBasenameNoExtension}.c",
+          "PROJECT_NAME=main",
+          "OBJS=main.c",
           "BUILD_MODE=DEBUG"
         ]
       },
       "osx": {
         "type": "shell",
-        "command": "cc ${fileBasename} -Iinclude ./include/*.c `pkg-config --libs --cflags raylib` -o ${fileBasenameNoExtension}",
+        "command": "cc main.c -Iinclude ./include/*.c `pkg-config --libs --cflags raylib` -o main",
         "args": []
       },
       "group": {
@@ -37,22 +37,18 @@
       "label": "build release",
       "type": "process",
       "command": "make",
-      "args": [
-        "PLATFORM=PLATFORM_DESKTOP",
-        "PROJECT_NAME=${fileBasenameNoExtension}",
-        "OBJS=${fileBasenameNoExtension}.c"
-      ],
+      "args": ["PLATFORM=PLATFORM_DESKTOP", "PROJECT_NAME=main", "OBJS=main.c"],
       "windows": {
         "command": "mingw32-make.exe",
         "args": [
           "RAYLIB_PATH=C:/raylib/raylib",
-          "PROJECT_NAME=${fileBasenameNoExtension}",
-          "OBJS=${fileBasenameNoExtension}.c"
+          "PROJECT_NAME=main",
+          "OBJS=main.c"
         ]
       },
       "osx": {
         "type": "shell",
-        "command": "cc ${fileBasename} -Iinclude ./include/*.c `pkg-config --libs --cflags raylib` -o ${fileBasenameNoExtension}",
+        "command": "cc ${fileBasename} -Iinclude ./include/*.c `pkg-config --libs --cflags raylib` -o main",
         "args": []
       },
       "group": "build",
