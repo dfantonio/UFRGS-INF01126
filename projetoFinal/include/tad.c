@@ -71,3 +71,45 @@ void percorreListaGCirc(ListaGCirc *lista, void (*cb)(void *, void *), void *tes
     cb(aux->info, teste);
   } while (aux->prox != lista->prim);
 }
+
+// Pilha genérica:
+
+PilhaGEnc *criaPilhaGEnc() {
+  PilhaGEnc *pilha = (PilhaGEnc *)malloc(sizeof(PilhaGEnc));
+  if (pilha != NULL)
+    pilha->topo = NULL;
+  return pilha;
+}
+
+void destroiPilhaGEnc(PilhaGEnc *pilha) {
+  NodoPGEnc *aux = pilha->topo;
+  while (aux != NULL) {
+    NodoPGEnc *tmp = aux->prox;
+    free(aux);
+    aux = tmp;
+  }
+  free(pilha);
+}
+
+void empilhaPilhaGEnc(PilhaGEnc *pilha, void *info) {
+  NodoPGEnc *novo = (NodoPGEnc *)malloc(sizeof(NodoPGEnc));
+  if (novo != NULL) { // Idealmente, sempre checar!
+    novo->info = info;
+    novo->prox = pilha->topo;
+    pilha->topo = novo;
+  }
+}
+
+void *desempilhaPilhaGEnc(PilhaGEnc *pilha) {
+  NodoPGEnc *aux = pilha->topo;
+  /* Aqui assumimos que desempilha eh
+  chamada apenas se a pilha nao eh vazia */
+  void *info = aux->info;
+  pilha->topo = aux->prox;
+  free(aux);
+  return info;
+}
+
+bool vaziaPilhaGEnc(PilhaGEnc *pilha) {
+  return (pilha->topo == NULL);
+}
