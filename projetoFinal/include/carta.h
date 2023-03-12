@@ -20,7 +20,7 @@ typedef struct {
   int numero;
   Naipe naipe;
   Rectangle coordsSprite;
-  Vector2 coordsMesa;
+  Rectangle coordsMesa;
   bool viradaParaBaixo;
 } Carta;
 

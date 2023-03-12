@@ -43,3 +43,9 @@ void criaCartas(Jogo *jogo) {
     // Insere no tableau
   }
 }
+
+Vector2 Rectangle2Vector(Rectangle rec) {
+  Vector2 vec = {rec.x, rec.y};
+
+  return vec;
+}

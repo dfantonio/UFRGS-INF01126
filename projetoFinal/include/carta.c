@@ -7,7 +7,7 @@ ListaGEnc *criaBaralho() {
   ListaGEnc *baralho = criaListaGEnc();
 
   Rectangle coordsSprite;
-  Vector2 coordsMesa = {0, 0};
+  Rectangle coordsMesa = {0, 0, CARTA_LARGURA, CARTA_ALTURA};
 
   for (int naipe = ESPADAS; naipe <= COPAS; naipe++) {
     for (int numero = 1; numero <= 13; numero++) {

@@ -1,3 +1,4 @@
+#include "carta.h"
 #include "raylib.h"
 #include "tad.h"
 
@@ -11,11 +12,18 @@ typedef struct {
 
 typedef struct {
   ListaGCirc *estoque;
+  Carta *estoqueTopo;
+  Carta *descarteTopo;
+
+  Vector2 mouseOffset;
+
   // pilha fundacao
   // pilha e lista pro tableau
   Texturas texturas;
 } Jogo;
 
 void criaCartas(Jogo *jogo);
+
+Vector2 Rectangle2Vector(Rectangle rec);
 
 #endif
