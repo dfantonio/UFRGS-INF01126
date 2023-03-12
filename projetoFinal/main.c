@@ -1,4 +1,6 @@
 #include "carta.h"
+#include "estoque.h"
+#include "jogo.h"
 #include "raylib.h"
 #include "raymath.h"
 #include "tad.h"
@@ -6,12 +8,13 @@
 static void UpdateDrawFrame(void); // Update and draw one frame
 
 int main() {
-  const int screenWidth = 800;
-  const int screenHeight = 450;
+  const int screenWidth = 1400;
+  const int screenHeight = 650;
 
   InitWindow(screenWidth, screenHeight, "Jogo de paciência");
 
   Texture2D cartas = LoadTexture("resources/playingCards.png");
+  Texture2D cardSlot = LoadTexture("resources/cardSlot.png");
 
   int frameWidth = 150;  // Sprite one frame rectangle width
   int frameHeight = 200; // Sprite one frame rectangle height
@@ -27,14 +30,17 @@ int main() {
 
   Vector2 mousePos;
 
-  // Cria estrutura das cartas
-  ListaGEnc *listaCartas = criaBaralho();
-  percorreBaralho(listaCartas);
+  Jogo jogo;
+  criaCartas(&jogo);
+
+  jogo.texturas.texturaCartas = LoadTexture("resources/playingCards.png");
+  jogo.texturas.texturaCartaVerso = LoadTexture("resources/cardBack.png");
 
   while (!WindowShouldClose()) {
     BeginDrawing();
 
     UpdateDrawFrame();
+    DrawTexture(cardSlot, 350, 150, WHITE);
     DrawTextureRec(cartas, spriteDaCarta, posicaoDaCarta, WHITE);
 
     // Comecei a brincar com arrastar cartas
@@ -70,6 +76,10 @@ int main() {
       posicaoDaCarta.x = 150;
       posicaoDaCarta.y = 150;
     }
+
+    renderizaEstoque(&jogo);
+
+    DrawFPS(10, 10);
 
     EndDrawing();
   }

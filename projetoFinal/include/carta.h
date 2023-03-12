@@ -7,6 +7,8 @@
 #define CARTA_LARGURA 150
 #define CARTA_ALTURA  200
 
+#define TAMANHO_BARALHO 52
+
 typedef enum {
   ESPADAS,
   PAUS,
@@ -17,8 +19,9 @@ typedef enum {
 typedef struct {
   int numero;
   Naipe naipe;
-  Vector2 coordsSprite;
+  Rectangle coordsSprite;
   Vector2 coordsMesa;
+  bool viradaParaBaixo;
 } Carta;
 
 // Cria um baralho com as 52 cartas

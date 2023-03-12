@@ -11,3 +11,7 @@ Regras:
 Fundação -> só recebe cartas em ordem crescente do mesmo naipe
 Tableau -> Suas pilhas tem que alternar as cores, e pode mover uma pilha inteira
 Estoque -> Pilha circular com as cartas. Ao chegar no final deve subtrair a pontuação
+
+TODO:
+Codar as funções de destruir estruturas
+no final do projeto descarregar todas as texturas

@@ -1,4 +1,5 @@
 #include "tad.h"
+#include "jogo.h"
 #include <stdlib.h>
 
 ListaGEnc *criaListaGEnc() {
@@ -22,4 +23,51 @@ void percorreListaGEnc(ListaGEnc *lista, void (*cb)(void *)) {
   NodoLGEnc *aux;
   for (aux = lista->prim; aux != NULL; aux = aux->prox)
     cb(aux->info);
+}
+
+/**
+ * Cria uma lista circular sem elementos
+ */
+ListaGCirc *criaListaGCirc() {
+  ListaGCirc *lista = (ListaGCirc *)malloc(sizeof(ListaGCirc));
+  if (lista)
+    lista->prim = NULL;
+  return lista;
+}
+
+/**
+ * Insere no início de uma lista circular
+ */
+int insereInicioListaGCirc(ListaGCirc *lista, void *info) {
+  NodoLGEnc *aux;
+  NodoLGEnc *novo = (NodoLGEnc *)malloc(sizeof(NodoLGEnc));
+  if (novo == NULL) // Idealmente, sempre checar!
+    return 0;
+
+  novo->info = info;
+
+  if (lista->prim == NULL) {
+    lista->prim = novo;
+    novo->prox = lista->prim;
+  } else {
+    aux = lista->prim;
+    while (aux->prox != lista->prim)
+      aux = aux->prox;
+    aux->prox = novo;
+    novo->prox = lista->prim;
+    lista->prim = novo;
+  }
+  return 1;
+}
+
+// TODO: Como passar o tipo jogo sem que tenha um importe cíclico entre tad.h e jogo.h?
+// void percorreListaGCirc(ListaGCirc *lista, void (*cb)(void *, *Jogo), Jogo *jogo) {
+void percorreListaGCirc(ListaGCirc *lista, void (*cb)(void *, void *), void *teste) {
+  NodoGCirc *aux = lista->prim;
+
+  cb(aux->info, teste);
+  do {
+    aux = aux->prox;
+    cb(aux->info, teste);
+  } while (aux->prox != lista->prim);
 }
