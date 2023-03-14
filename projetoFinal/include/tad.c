@@ -62,13 +62,13 @@ int insereInicioListaGCirc(ListaGCirc *lista, void *info) {
 
 // TODO: Como passar o tipo jogo sem que tenha um importe cíclico entre tad.h e jogo.h?
 // void percorreListaGCirc(ListaGCirc *lista, void (*cb)(void *, *Jogo), Jogo *jogo) {
-void percorreListaGCirc(ListaGCirc *lista, void (*cb)(void *, void *), void *teste) {
+void percorreListaGCirc(ListaGCirc *lista, void (*cb)(void *, void *), void *jogo) {
   NodoGCirc *aux = lista->prim;
 
-  cb(aux->info, teste);
+  cb(aux->info, jogo);
   do {
     aux = aux->prox;
-    cb(aux->info, teste);
+    cb(aux->info, jogo);
   } while (aux->prox != lista->prim);
 }
 
@@ -112,4 +112,16 @@ void *desempilhaPilhaGEnc(PilhaGEnc *pilha) {
 
 bool vaziaPilhaGEnc(PilhaGEnc *pilha) {
   return (pilha->topo == NULL);
+}
+
+void percorrePilhaGEnc(PilhaGEnc *pilha, void (*cb)(void *, void *), void *jogo) {
+  NodoGCirc *aux = pilha->topo;
+
+  if (aux == NULL || aux->prox == NULL) return;
+
+  cb(aux->info, jogo);
+  do {
+    aux = aux->prox;
+    cb(aux->info, jogo);
+  } while (aux->prox != NULL);
 }

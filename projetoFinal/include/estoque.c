@@ -2,8 +2,9 @@
 #include "carta.h"
 #include "jogo.h"
 #include "raylib.h"
+#include <stdlib.h>
 
-void renderizaCartas(void *info, void *jogoVar) {
+void renderizaCartasEstoque(void *info, void *jogoVar) {
   Carta *carta = (Carta *)info;
   Jogo *jogo = (Jogo *)jogoVar;
 
@@ -26,18 +27,20 @@ e saber a pilha de compra ficou vazia e eu preciso reiniciar a pilha de descarte
 */
 
 void renderizaEstoque(Jogo *jogo) {
-  percorreListaGCirc(jogo->estoque, renderizaCartas, jogo);
+  percorreListaGCirc(jogo->estoque, renderizaCartasEstoque, jogo);
 
   Vector2 mousePos = GetMousePosition();
+  // Verifica o clique na pilha de compra pra virar uma carta
   if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && CheckCollisionPointRec(mousePos, jogo->estoqueTopo->coordsMesa)) {
     jogo->estoqueTopo->viradaParaBaixo = false;
     jogo->estoqueTopo->coordsMesa.x = 150;
+  }
 
-    // if (jogo->mouseOffset.x == 0) {
-    //   jogo->mouseOffset.x = GetMouseX() - jogo->estoqueTopo->coordsMesa.x;
-    //   jogo->mouseOffset.y = GetMouseY() - jogo->estoqueTopo->coordsMesa.y;
-
-    //   // isMousePressed = true; // Também define q o mouse está pressionado. Isso serve pra quando tu desliza o mouse mto rápido e ele "sai" da carta
-    // }
+  // Verifica o clique pra arrastar alguma carta da pilha de descarte
+  if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && jogo->descarteTopo && CheckCollisionPointRec(mousePos, jogo->descarteTopo->coordsMesa)) {
+    if (jogo->cartaEmMovimento == NULL) {
+      jogo->cartaEmMovimento = jogo->descarteTopo;
+      jogo->cartaEmMovimento->posicaoAnterior = Rectangle2Vector(jogo->cartaEmMovimento->coordsMesa);
+    }
   }
 }

@@ -16,12 +16,20 @@ typedef enum {
   COPAS,
 } Naipe;
 
+typedef enum {
+  FUNDACAO,
+  TABLEAU,
+  ESTOQUE
+} EstadosCarta;
+
 typedef struct {
   int numero;
   Naipe naipe;
   Rectangle coordsSprite;
   Rectangle coordsMesa;
   bool viradaParaBaixo;
+  EstadosCarta posicao;
+  Vector2 posicaoAnterior;
 } Carta;
 
 // Cria um baralho com as 52 cartas

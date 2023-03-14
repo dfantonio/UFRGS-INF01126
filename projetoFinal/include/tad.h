@@ -39,23 +39,25 @@ ListaGCirc *criaListaGCirc();
 int insereInicioListaGCirc(ListaGCirc *lista, void *info);
 
 // Percorre a lista circular
-void percorreListaGCirc(ListaGCirc *lista, void (*cb)(void *, void *), void *teste);
+void percorreListaGCirc(ListaGCirc *lista, void (*cb)(void *, void *), void *jogo);
 
 // Pilha genérica
 
 // Funcao que cria uma pilha
-PilhaGEnc *criaPilhaEnc();
+PilhaGEnc *criaPilhaGEnc();
 
 // Funcao que destroi uma pilha
-void destroiPilhaEnc(PilhaGEnc *pilha);
+void destroiPilhaGEnc(PilhaGEnc *pilha);
 
 // Funcao que insere um elemento na pilha
-void empilhaPilhaEnc(PilhaGEnc *pilha, void *info);
+void empilhaPilhaGEnc(PilhaGEnc *pilha, void *info);
 
 // Funcao que remove um elemento da pilha
-void *desempilhaPilhaEnc(PilhaGEnc *pilha);
+void *desempilhaPilhaGEnc(PilhaGEnc *pilha);
 
 // Funcao que determina se uma pilha eh vazia
-bool vaziaPilhaEnc(PilhaGEnc *pilha);
+bool vaziaPilhaGEnc(PilhaGEnc *pilha);
+
+void percorrePilhaGEnc(PilhaGEnc *pilha, void (*cb)(void *, void *), void *jogo);
 
 #endif

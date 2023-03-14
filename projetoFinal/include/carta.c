@@ -8,6 +8,7 @@ ListaGEnc *criaBaralho() {
 
   Rectangle coordsSprite;
   Rectangle coordsMesa = {0, 0, CARTA_LARGURA, CARTA_ALTURA};
+  Vector2 posicaoAnterior = {0, 0};
 
   for (int naipe = ESPADAS; naipe <= COPAS; naipe++) {
     for (int numero = 1; numero <= 13; numero++) {
@@ -17,7 +18,14 @@ ListaGEnc *criaBaralho() {
       coordsSprite.width = CARTA_LARGURA;
 
       Carta *carta = (Carta *)malloc(sizeof(Carta));
-      *carta = (Carta){numero, naipe, coordsSprite, coordsMesa, false};
+      *carta = (Carta){
+          numero,
+          naipe,
+          coordsSprite,
+          coordsMesa,
+          false,
+          ESTOQUE,
+          posicaoAnterior};
       insereInicioListaGEnc(baralho, carta);
     }
   }
