@@ -1,6 +1,7 @@
 #include "carta.h"
+#include "fila.h"
+#include "pilha.h"
 #include "raylib.h"
-#include "tad.h"
 
 #ifndef _JOGO_H_
 #define _JOGO_H_
@@ -15,7 +16,8 @@ typedef struct {
 } Texturas;
 
 typedef struct {
-  ListaGCirc *estoque;
+  PilhaGEnc *estoque;
+  PilhaGEnc *descarte;
   Carta *estoqueTopo;
   Carta *descarteTopo;
 

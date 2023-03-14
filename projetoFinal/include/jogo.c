@@ -1,5 +1,6 @@
 #include "jogo.h"
 #include "carta.h"
+#include "pilha.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -7,7 +8,8 @@ void criaCartas(Jogo *jogo) {
   SetRandomSeed(0);
 
   // Inicia todas as listas/pilhas
-  jogo->estoque = criaListaGCirc();
+  jogo->estoque = criaPilhaGEnc();
+  jogo->descarte = criaPilhaGEnc();
   for (int i = 0; i < 4; i++) {
     jogo->fundacao[i] = criaPilhaGEnc();
   }
@@ -44,7 +46,7 @@ void criaCartas(Jogo *jogo) {
   // for (i = 0; i < 24; i++) {
   for (i = 0; i < 3; i++) {
     ((Carta *)temp[i]->info)->viradaParaBaixo = true;
-    insereInicioListaGCirc(jogo->estoque, temp[i]->info);
+    empilhaPilhaGEnc(jogo->estoque, temp[i]->info);
   }
 
   // Insere as outras cartas no tableau

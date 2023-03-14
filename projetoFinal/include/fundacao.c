@@ -1,4 +1,5 @@
 #include "jogo.h"
+#include "pilha.h"
 #include <stdlib.h>
 
 void renderizaCartasFundacao(void *info, void *jogoVar) {
@@ -45,7 +46,7 @@ void verificaMovimentoPFundacao(Jogo *jogo, int index) {
     jogo->cartaEmMovimento->coordsMesa.y = FUNDACAO_OFFSET_Y;
     jogo->cartaEmMovimento->posicao = FUNDACAO;
 
-    // TODO: Remover a carta da fila do estoque
+    // TODO: Remover a carta da pilha do estoque
 
     // Finaliza o movimento
     jogo->cartaEmMovimento = NULL;

@@ -27,7 +27,7 @@ e saber a pilha de compra ficou vazia e eu preciso reiniciar a pilha de descarte
 */
 
 void renderizaEstoque(Jogo *jogo) {
-  percorreListaGCirc(jogo->estoque, renderizaCartasEstoque, jogo);
+  percorrePilhaGEnc(jogo->estoque, renderizaCartasEstoque, jogo);
 
   Vector2 mousePos = GetMousePosition();
   // Verifica o clique na pilha de compra pra virar uma carta
