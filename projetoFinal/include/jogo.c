@@ -20,8 +20,7 @@ void criaCartas(Jogo *jogo) {
   jogo->mouseOffset.y = 0;
   // TODO: Aqui tbm tem que iniciar o tableau e a fundação
 
-  NodoLGEnc *
-      temp[TAMANHO_BARALHO] = {0};
+  NodoLGEnc *temp[TAMANHO_BARALHO] = {0};
 
   // Cria um baralho com todas as cartas
   ListaGEnc *listaCartas = criaBaralho();
@@ -43,9 +42,10 @@ void criaCartas(Jogo *jogo) {
   }
 
   // Atribui as 24 primeiras cartas para o estoque
-  // for (i = 0; i < 24; i++) {
-  for (i = 0; i < 3; i++) {
+  for (i = 0; i < 24; i++) {
     ((Carta *)temp[i]->info)->viradaParaBaixo = true;
+    ((Carta *)temp[i]->info)->coordsMesa = ESTOQUE_OFFSET;
+
     empilhaPilhaGEnc(jogo->estoque, temp[i]->info);
   }
 

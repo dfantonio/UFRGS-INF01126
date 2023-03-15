@@ -1,5 +1,6 @@
 #include "carta.h"
 #include "fila.h"
+#include "jogo.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -41,4 +42,18 @@ void imprimeCartas(void *info) {
 
 void percorreBaralho(ListaGEnc *lista) {
   percorreListaGEnc(lista, imprimeCartas);
+}
+
+void renderizaCarta(void *info, void *jogoVar) {
+  Carta *carta = (Carta *)info;
+  Jogo *jogo = (Jogo *)jogoVar;
+
+  Texture2D textura;
+  if (carta->viradaParaBaixo) {
+    textura = jogo->texturas.texturaCartaVerso;
+    DrawTexture(textura, carta->coordsMesa.x, carta->coordsMesa.y, WHITE);
+  } else {
+    textura = jogo->texturas.texturaCartas;
+    DrawTextureRec(textura, carta->coordsSprite, Rectangle2Vector(carta->coordsMesa), WHITE);
+  }
 }

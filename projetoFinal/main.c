@@ -20,6 +20,7 @@ int main() {
   jogo.texturas.texturaCartas = LoadTexture("resources/playingCards.png");
   jogo.texturas.texturaCartaVerso = LoadTexture("resources/cardBack.png");
   jogo.texturas.texturaSlot = LoadTexture("resources/cardSlot.png");
+  jogo.texturas.texturaEstoque = LoadTexture("resources/cardReload.png");
 
   while (!WindowShouldClose()) {
     BeginDrawing();

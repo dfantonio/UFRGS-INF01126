@@ -9,10 +9,17 @@
 #define FUNDACAO_OFFSET_X 450
 #define FUNDACAO_OFFSET_Y 10
 
+#define ESTOQUE_OFFSET_X 0
+#define ESTOQUE_OFFSET_Y 10
+
+#define ESTOQUE_OFFSET \
+  CLITERAL(Rectangle) { ESTOQUE_OFFSET_X, ESTOQUE_OFFSET_Y, CARTA_LARGURA, CARTA_ALTURA }
+
 typedef struct {
   Texture2D texturaCartas;
   Texture2D texturaCartaVerso;
   Texture2D texturaSlot;
+  Texture2D texturaEstoque;
 } Texturas;
 
 typedef struct {
