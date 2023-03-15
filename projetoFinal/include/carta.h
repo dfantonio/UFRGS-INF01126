@@ -38,4 +38,7 @@ ListaGEnc *criaBaralho();
 // Percorre o baralho
 void percorreBaralho(ListaGEnc *lista);
 
+// Renderiza uma carta
+void renderizaCarta(void *info, void *jogoVar);
+
 #endif

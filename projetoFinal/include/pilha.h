@@ -6,10 +6,12 @@
 typedef struct NodoPGEnc {
   void *info;
   struct NodoPGEnc *prox;
+  struct NodoPGEnc *ant;
 } NodoPGEnc;
 
 typedef struct {
   NodoPGEnc *topo;
+  NodoPGEnc *base;
 } PilhaGEnc;
 
 // Pilha genérica
