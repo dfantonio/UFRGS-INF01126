@@ -4,7 +4,6 @@
 #include "jogo.h"
 #include "raylib.h"
 #include "raymath.h"
-#include "tad.h"
 #include <stdlib.h>
 
 int main() {
