@@ -1,5 +1,6 @@
 #include "jogo.h"
 #include "carta.h"
+#include "pilha.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -7,7 +8,8 @@ void criaCartas(Jogo *jogo) {
   SetRandomSeed(0);
 
   // Inicia todas as listas/pilhas
-  jogo->estoque = criaListaGCirc();
+  jogo->estoque = criaPilhaGEnc();
+  jogo->descarte = criaPilhaGEnc();
   for (int i = 0; i < 4; i++) {
     jogo->fundacao[i] = criaPilhaGEnc();
   }
@@ -18,8 +20,7 @@ void criaCartas(Jogo *jogo) {
   jogo->mouseOffset.y = 0;
   // TODO: Aqui tbm tem que iniciar o tableau e a fundação
 
-  NodoLGEnc *
-      temp[TAMANHO_BARALHO] = {0};
+  NodoLGEnc *temp[TAMANHO_BARALHO] = {0};
 
   // Cria um baralho com todas as cartas
   ListaGEnc *listaCartas = criaBaralho();
@@ -41,10 +42,11 @@ void criaCartas(Jogo *jogo) {
   }
 
   // Atribui as 24 primeiras cartas para o estoque
-  // for (i = 0; i < 24; i++) {
-  for (i = 0; i < 3; i++) {
+  for (i = 0; i < 24; i++) {
     ((Carta *)temp[i]->info)->viradaParaBaixo = true;
-    insereInicioListaGCirc(jogo->estoque, temp[i]->info);
+    ((Carta *)temp[i]->info)->coordsMesa = ESTOQUE_OFFSET;
+
+    empilhaPilhaGEnc(jogo->estoque, temp[i]->info);
   }
 
   // Insere as outras cartas no tableau

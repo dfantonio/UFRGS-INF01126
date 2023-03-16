@@ -8,32 +8,43 @@ void renderizaCartasEstoque(void *info, void *jogoVar) {
   Carta *carta = (Carta *)info;
   Jogo *jogo = (Jogo *)jogoVar;
 
-  Texture2D textura;
-  if (carta->viradaParaBaixo) {
-    textura = jogo->texturas.texturaCartaVerso;
-    DrawTexture(textura, carta->coordsMesa.x, carta->coordsMesa.y, WHITE);
+  renderizaCarta(info, jogoVar);
+
+  if (carta->viradaParaBaixo)
     jogo->estoqueTopo = carta;
-  } else {
-    textura = jogo->texturas.texturaCartas;
-    DrawTextureRec(textura, carta->coordsSprite, Rectangle2Vector(carta->coordsMesa), WHITE);
+  else
     jogo->descarteTopo = carta;
-  }
 }
 
-/*
-TODO: Toda essa lógica seria muito mais fácil se o monte de compras e descarte fossem duas
-pilhas separadas, pois assim eu consigo controlar mais facilmente o tamanho de cada pilha
-e saber a pilha de compra ficou vazia e eu preciso reiniciar a pilha de descarte
-*/
-
 void renderizaEstoque(Jogo *jogo) {
-  percorreListaGCirc(jogo->estoque, renderizaCartasEstoque, jogo);
+  DrawTexture(jogo->texturas.texturaEstoque, ESTOQUE_OFFSET_X, ESTOQUE_OFFSET_Y, WHITE);
+
+  jogo->estoqueTopo = NULL;
+  percorrePilhaGEnc(jogo->estoque, renderizaCartasEstoque, jogo);
+  jogo->descarteTopo = NULL;
+  percorrePilhaGEnc(jogo->descarte, renderizaCartasEstoque, jogo);
 
   Vector2 mousePos = GetMousePosition();
+
+  // Verifica um clique no estoque quando não tem nenhuma carta pra virar
+  if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && CheckCollisionPointRec(mousePos, ESTOQUE_OFFSET)) {
+    if (vaziaPilhaGEnc(jogo->estoque)) {
+      while (!vaziaPilhaGEnc(jogo->descarte)) {
+        Carta *movimento = desempilhaPilhaGEnc(jogo->descarte);
+        movimento->viradaParaBaixo = true;
+        movimento->coordsMesa.x = 0;
+        empilhaPilhaGEnc(jogo->estoque, movimento);
+      }
+      jogo->descarteTopo = NULL;
+    }
+  }
+
   // Verifica o clique na pilha de compra pra virar uma carta
-  if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && CheckCollisionPointRec(mousePos, jogo->estoqueTopo->coordsMesa)) {
+  if (jogo->estoqueTopo && IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && CheckCollisionPointRec(mousePos, jogo->estoqueTopo->coordsMesa)) {
     jogo->estoqueTopo->viradaParaBaixo = false;
     jogo->estoqueTopo->coordsMesa.x = 150;
+    Carta *movimento = desempilhaPilhaGEnc(jogo->estoque);
+    empilhaPilhaGEnc(jogo->descarte, movimento);
   }
 
   // Verifica o clique pra arrastar alguma carta da pilha de descarte

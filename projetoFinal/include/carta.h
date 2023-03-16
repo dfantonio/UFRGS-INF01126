@@ -1,5 +1,5 @@
+#include "fila.h"
 #include "raylib.h"
-#include "tad.h"
 
 #ifndef _CARTA_H_
 #define _CARTA_H_
@@ -37,5 +37,8 @@ ListaGEnc *criaBaralho();
 
 // Percorre o baralho
 void percorreBaralho(ListaGEnc *lista);
+
+// Renderiza uma carta
+void renderizaCarta(void *info, void *jogoVar);
 
 #endif
