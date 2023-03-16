@@ -8,7 +8,9 @@ void renderizaCartasEstoque(void *info, void *jogoVar) {
   Carta *carta = (Carta *)info;
   Jogo *jogo = (Jogo *)jogoVar;
 
-  renderizaCarta(info, jogoVar);
+  // Caso a carta renderizada não seja a que está em movimento
+  if (jogo->cartaEmMovimento != carta)
+    renderizaCarta(info, jogoVar);
 
   if (carta->viradaParaBaixo)
     jogo->estoqueTopo = carta;

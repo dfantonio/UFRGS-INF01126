@@ -3,6 +3,15 @@
 #include "pilha.h"
 #include <stdlib.h>
 
+void renderizaCartasFundacao(void *info, void *jogoVar) {
+  Carta *carta = (Carta *)info;
+  Jogo *jogo = (Jogo *)jogoVar;
+
+  // Caso a carta renderizada não seja a que está em movimento
+  if (jogo->cartaEmMovimento != carta)
+    renderizaCarta(info, jogoVar);
+}
+
 void renderizaFundacao(Jogo *jogo) {
   Vector2 mousePos = GetMousePosition();
 
@@ -10,7 +19,7 @@ void renderizaFundacao(Jogo *jogo) {
     // Desenha os slots da funcação
     DrawTexture(jogo->texturas.texturaSlot, FUNDACAO_OFFSET_X + (CARTA_LARGURA * i), FUNDACAO_OFFSET_Y, WHITE);
     // Percorre todas as pilhas e renderiza as cartas
-    percorrePilhaReversoGEnc(jogo->fundacao[i], renderizaCarta, jogo);
+    percorrePilhaReversoGEnc(jogo->fundacao[i], renderizaCartasFundacao, jogo);
 
     // Caso a pilha esteja vazia não verifica movimento
     if (jogo->fundacao[i]->topo) {

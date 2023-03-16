@@ -55,6 +55,9 @@ int main() {
       }
       jogo.cartaEmMovimento->coordsMesa.x = GetMouseX() - jogo.mouseOffset.x;
       jogo.cartaEmMovimento->coordsMesa.y = GetMouseY() - jogo.mouseOffset.y;
+
+      // Renderiza a carta em movimento depois de todas as outras
+      renderizaCarta(jogo.cartaEmMovimento, &jogo);
     }
 
     DrawFPS(10, 10);
