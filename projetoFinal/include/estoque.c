@@ -20,9 +20,9 @@ void renderizaEstoque(Jogo *jogo) {
   DrawTexture(jogo->texturas.texturaEstoque, ESTOQUE_OFFSET_X, ESTOQUE_OFFSET_Y, WHITE);
 
   jogo->estoqueTopo = NULL;
-  percorrePilhaGEnc(jogo->estoque, renderizaCartasEstoque, jogo);
+  percorrePilhaReversoGEnc(jogo->estoque, renderizaCartasEstoque, jogo);
   jogo->descarteTopo = NULL;
-  percorrePilhaGEnc(jogo->descarte, renderizaCartasEstoque, jogo);
+  percorrePilhaReversoGEnc(jogo->descarte, renderizaCartasEstoque, jogo);
 
   Vector2 mousePos = GetMousePosition();
 
