@@ -6,12 +6,10 @@
 typedef struct NodoPGEnc {
   void *info;
   struct NodoPGEnc *prox;
-  struct NodoPGEnc *ant;
 } NodoPGEnc;
 
 typedef struct {
   NodoPGEnc *topo;
-  NodoPGEnc *base;
 } PilhaGEnc;
 
 // Pilha genérica
@@ -31,6 +29,10 @@ void *desempilhaPilhaGEnc(PilhaGEnc *pilha);
 // Funcao que determina se uma pilha eh vazia
 bool vaziaPilhaGEnc(PilhaGEnc *pilha);
 
+// Percorre a pilha a partir do topo para a base
 void percorrePilhaGEnc(PilhaGEnc *pilha, void (*cb)(void *, void *), void *jogo);
+
+// Percorre a pilha a partir da base para o topo
+void percorrePilhaReversoGEnc(PilhaGEnc *pilha, void (*cb)(void *, void *), void *jogo);
 
 #endif

@@ -50,11 +50,14 @@ int main() {
 
     if (jogo.cartaEmMovimento) {
       if (jogo.mouseOffset.x == 0) { // Se não houver nenhum offset pro mouse signica que é o primeiro clique detectado
-        jogo.mouseOffset.x = GetMouseX() - jogo.descarteTopo->coordsMesa.x;
-        jogo.mouseOffset.y = GetMouseY() - jogo.descarteTopo->coordsMesa.y;
+        jogo.mouseOffset.x = GetMouseX() - jogo.cartaEmMovimento->coordsMesa.x;
+        jogo.mouseOffset.y = GetMouseY() - jogo.cartaEmMovimento->coordsMesa.y;
       }
-      jogo.descarteTopo->coordsMesa.x = GetMouseX() - jogo.mouseOffset.x;
-      jogo.descarteTopo->coordsMesa.y = GetMouseY() - jogo.mouseOffset.y;
+      jogo.cartaEmMovimento->coordsMesa.x = GetMouseX() - jogo.mouseOffset.x;
+      jogo.cartaEmMovimento->coordsMesa.y = GetMouseY() - jogo.mouseOffset.y;
+
+      // Renderiza a carta em movimento depois de todas as outras
+      renderizaCarta(jogo.cartaEmMovimento, &jogo);
     }
 
     DrawFPS(10, 10);
