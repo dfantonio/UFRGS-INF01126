@@ -18,14 +18,14 @@ void criaCartas(Jogo *jogo) {
   jogo->cartaEmMovimento = NULL;
   jogo->mouseOffset.x = 0;
   jogo->mouseOffset.y = 0;
-  // TODO: Aqui tbm tem que iniciar o tableau e a fundação
+  // TODO: Aqui tbm tem que iniciar o tableau e a fundaï¿½ï¿½o
 
   NodoLGEnc *temp[TAMANHO_BARALHO] = {0};
 
   // Cria um baralho com todas as cartas
   ListaGEnc *listaCartas = criaBaralho();
 
-  // Copia os endereços pra um array de 52 posições
+  // Copia os endereï¿½os pra um array de 52 posiï¿½ï¿½es
   int i = 0;
   for (NodoLGEnc *pont = listaCartas->prim; i < TAMANHO_BARALHO; pont = pont->prox) {
     temp[i] = pont;
@@ -42,18 +42,27 @@ void criaCartas(Jogo *jogo) {
   }
 
   // Atribui as 24 primeiras cartas para o estoque
-  for (i = 0; i < 24; i++) {
+  for (i = 0; i < 24; i++) { 
     ((Carta *)temp[i]->info)->viradaParaBaixo = true;
     ((Carta *)temp[i]->info)->coordsMesa = ESTOQUE_OFFSET;
 
-    empilhaPilhaGEnc(jogo->estoque, temp[i]->info);
+    empilhaPilhaGEnc(jogo->estoque, temp[i]->info); 
   }
 
-  // Insere as outras cartas no tableau
-  for (i = 24; i < TAMANHO_BARALHO; i++) {
-    ((Carta *)temp[i]->info)->posicao = TABLEAU;
-    // Insere no tableau
-  }
+  // Insere as outras 28 cartas no tableau
+  int coluna=1;
+  int indiceCartaInseridaTableau=24;
+  for(int j=0;j<coluna;j++)
+    for (i = indiceCartaInseridaTableau; i < TAMANHO_BARALHO; i++) {
+      if((i-indiceCartaInseridaTableau) == coluna){ //o numero de cartas por coluna Ã© igual ao indice da coluna
+        coluna++;
+        indiceCartaInseridaTableau = i+1; //for deve inicializar apÃ³s a Ãºltima carta inserida
+        break;
+      }
+      ((Carta *)temp[i]->info)->posicao = TABLEAU; //carta estÃ¡ no tableau
+      // Insere no tableau
+      empilhaPilhaGEnc(jogo->tableau[j], temp[i]->info);
+    }
 }
 
 Vector2 Rectangle2Vector(Rectangle rec) {
