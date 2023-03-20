@@ -2,13 +2,12 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-// Pilha genérica:
+// Pilha genï¿½rica:
 
 PilhaGEnc *criaPilhaGEnc() {
   PilhaGEnc *pilha = (PilhaGEnc *)malloc(sizeof(PilhaGEnc));
   if (pilha != NULL) {
     pilha->topo = NULL;
-    pilha->base = NULL;
   }
   return pilha;
 }
@@ -26,12 +25,8 @@ void destroiPilhaGEnc(PilhaGEnc *pilha) {
 void empilhaPilhaGEnc(PilhaGEnc *pilha, void *info) {
   NodoPGEnc *novo = (NodoPGEnc *)malloc(sizeof(NodoPGEnc));
   if (novo != NULL) { // Idealmente, sempre checar!
-    if (pilha->base == NULL) pilha->base = novo;
-
     novo->info = info;
-    novo->ant = NULL;
     novo->prox = pilha->topo;
-    if (pilha->topo) pilha->topo->ant = novo;
     pilha->topo = novo;
   }
 }
@@ -42,8 +37,6 @@ void *desempilhaPilhaGEnc(PilhaGEnc *pilha) {
   chamada apenas se a pilha nao eh vazia */
   void *info = aux->info;
   pilha->topo = aux->prox;
-  if (!pilha->topo) pilha->base = NULL;
-  if (pilha->topo) pilha->topo->ant = NULL;
   free(aux);
   return info;
 }
@@ -53,11 +46,40 @@ bool vaziaPilhaGEnc(PilhaGEnc *pilha) {
 }
 
 void percorrePilhaGEnc(PilhaGEnc *pilha, void (*cb)(void *, void *), void *jogo) {
-  NodoPGEnc *aux = pilha->base;
+  NodoPGEnc *aux = pilha->topo;
 
   if (aux == NULL) return;
   do {
     cb(aux->info, jogo);
-    aux = aux->ant;
+    aux = aux->prox;
   } while (aux != NULL);
+}
+
+void percorrePilhaReversoGEnc(PilhaGEnc *pilha, void (*cb)(void *, void *), void *jogo) {
+  PilhaGEnc *temp = criaPilhaGEnc();
+  NodoPGEnc *aux = pilha->topo;
+
+  // Caso a pilha seja vazia nï¿½o faz nada
+  if (aux == NULL) return;
+
+  // Inverte a pilha pra base ser o topo
+  do {
+    empilhaPilhaGEnc(temp, desempilhaPilhaGEnc(pilha));
+    aux = pilha->topo;
+  } while (aux != NULL);
+
+  // Chama os callback na ordem invertida (correta)
+  aux = temp->topo;
+  do {
+    cb(aux->info, jogo);
+    aux = aux->prox;
+  } while (aux != NULL);
+
+  aux = temp->topo;
+  do {
+    empilhaPilhaGEnc(pilha, desempilhaPilhaGEnc(temp));
+    aux = temp->topo;
+  } while (aux != NULL);
+
+  destroiPilhaGEnc(temp);
 }
