@@ -25,6 +25,7 @@ void destroiPilhaGEnc(PilhaGEnc *pilha) {
 void empilhaPilhaGEnc(PilhaGEnc *pilha, void *info) {
   NodoPGEnc *novo = (NodoPGEnc *)malloc(sizeof(NodoPGEnc));
   if (novo != NULL) { // Idealmente, sempre checar!
+
     novo->info = info;
     novo->prox = pilha->topo;
     pilha->topo = novo;
