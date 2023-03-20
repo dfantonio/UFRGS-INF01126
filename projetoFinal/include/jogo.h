@@ -42,8 +42,7 @@ typedef struct {
   Carta *cartaEmMovimento;
 } Jogo;
 
-void criaCartas(Jogo *jogo);
-
+void criaLayoutJogo(Jogo *jogo);
 Vector2 Rectangle2Vector(Rectangle rec);
 
 #endif
