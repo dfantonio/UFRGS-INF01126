@@ -8,6 +8,7 @@
 void renderizaCartasTableau(void *info, void *jogoVar) {
   Carta *carta = (Carta *)info;
   Jogo *jogo = (Jogo *)jogoVar;
+  
   // Caso a carta renderizada nao seja a que esta em movimento
   if (jogo->cartaEmMovimento != carta)
     renderizaCarta(info, jogoVar);
@@ -23,7 +24,6 @@ void renderizaTableau(Jogo *jogo) {
     // Caso a pilha esteja vazia nao verifica movimento
     if (jogo->tableau[i]->topo) {
       Carta *cartaTopo = jogo->tableau[i]->topo->info;
-
       // Verifica momento pra trocar uma carta entre as colunas do tableau
       if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && cartaTopo && CheckCollisionPointRec(mousePos, cartaTopo->coordsMesa)) {
         if (jogo->cartaEmMovimento == NULL) {
