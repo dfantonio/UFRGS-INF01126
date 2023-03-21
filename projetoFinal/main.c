@@ -11,7 +11,7 @@ int main() {
   const int screenWidth = 1400;
   const int screenHeight = 650;
 
-  InitWindow(screenWidth, screenHeight, "Jogo de paciï¿½ncia");
+  InitWindow(screenWidth, screenHeight, "Jogo de paciencia");
 
   SetTargetFPS(60); // Set our game to run at 60 frames-per-second
 
@@ -33,7 +33,7 @@ int main() {
     renderizaTableau(&jogo);
 
     if (IsMouseButtonReleased(MOUSE_LEFT_BUTTON) && jogo.cartaEmMovimento) {
-      // Deve verificar se a carta em movimento nï¿½o tï¿½ em cima de nenhum slot do tableau ou fundaï¿½ï¿½o
+      // Deve verificar se a carta em movimento nao ta em cima de nenhum slot do tableau ou fundacao
       for (int i = 0; i < 4; i++) {
         Rectangle posicaoFundacao = {FUNDACAO_OFFSET_X + (CARTA_LARGURA * i), FUNDACAO_OFFSET_Y, CARTA_LARGURA, CARTA_ALTURA};
         if (jogo.cartaEmMovimento && CheckCollisionRecs(jogo.cartaEmMovimento->coordsMesa, posicaoFundacao)) {
@@ -41,7 +41,7 @@ int main() {
         }
       }
 
-      // Caso nï¿½o tenha acontecido nenhuma movimentaï¿½ï¿½o, retorna a carta pra sua posiï¿½ï¿½o original
+      // Caso nao tenha acontecido nenhuma movimentacao, retorna a carta pra sua posicao original
       if (jogo.cartaEmMovimento) {
         jogo.cartaEmMovimento->coordsMesa.x = jogo.cartaEmMovimento->posicaoAnterior.x;
         jogo.cartaEmMovimento->coordsMesa.y = jogo.cartaEmMovimento->posicaoAnterior.y;
