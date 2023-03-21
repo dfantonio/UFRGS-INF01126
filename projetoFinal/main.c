@@ -16,7 +16,7 @@ int main() {
   SetTargetFPS(60); // Set our game to run at 60 frames-per-second
 
   Jogo jogo;
-  criaCartas(&jogo);
+  criaLayoutJogo(&jogo);
 
   jogo.texturas.texturaCartas = LoadTexture("resources/playingCards.png");
   jogo.texturas.texturaCartaVerso = LoadTexture("resources/cardBack.png");

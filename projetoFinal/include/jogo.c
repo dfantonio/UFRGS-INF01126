@@ -4,9 +4,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define NUM_COLUNAS_TABLEAU 7
-#define NUM_COLUNAS_FUNDACAO 4
-
 void inicializaListasEPilhas(Jogo *jogo);
 void embaralhaBaralho(ListaGEnc *listaCartas, NodoLGEnc *temp[]);
 

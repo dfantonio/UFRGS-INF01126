@@ -18,6 +18,9 @@
 #define ESTOQUE_OFFSET \
   CLITERAL(Rectangle) { ESTOQUE_OFFSET_X, ESTOQUE_OFFSET_Y, CARTA_LARGURA, CARTA_ALTURA }
 
+#define NUM_COLUNAS_TABLEAU 7
+#define NUM_COLUNAS_FUNDACAO 4
+
 typedef struct {
   Texture2D texturaCartas;
   Texture2D texturaCartaVerso;
