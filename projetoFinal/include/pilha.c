@@ -2,7 +2,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-// Pilha gen�rica:
+// Pilha generica:
 
 PilhaGEnc *criaPilhaGEnc() {
   PilhaGEnc *pilha = (PilhaGEnc *)malloc(sizeof(PilhaGEnc));
@@ -60,7 +60,7 @@ void percorrePilhaReversoGEnc(PilhaGEnc *pilha, void (*cb)(void *, void *), void
   PilhaGEnc *temp = criaPilhaGEnc();
   NodoPGEnc *aux = pilha->topo;
 
-  // Caso a pilha seja vazia n�o faz nada
+  // Caso a pilha seja vazia nao faz nada
   if (aux == NULL) return;
 
   // Inverte a pilha pra base ser o topo
