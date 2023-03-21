@@ -42,7 +42,7 @@ void criaLayoutJogo(Jogo *jogo) {
 
       Rectangle colunasTableau = TABLEAU_OFFSET;
       colunasTableau.x = (j+1)*TABLEAU_OFFSET.x; //desloca colunas
-      colunasTableau.y = (i-indiceCartaInicialTableau+TABLEAU_OFFSET_DELTA_Y)*TABLEAU_OFFSET.x; //desloca cartas na pilha
+      colunasTableau.y = (i-indiceCartaInicialTableau+TABLEAU_OFFSET_DELTA_Y) + TABLEAU_OFFSET_Y; //desloca cartas na pilha
       ((Carta *)temp[i]->info)->coordsMesa = colunasTableau;
       empilhaPilhaGEnc(jogo->tableau[j], temp[i]->info);
     }

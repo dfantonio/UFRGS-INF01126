@@ -12,8 +12,8 @@
 #define ESTOQUE_OFFSET_X 0
 #define ESTOQUE_OFFSET_Y 10
 
-#define TABLEAU_OFFSET_X 300
-#define TABLEAU_OFFSET_Y 350
+#define TABLEAU_OFFSET_X 230
+#define TABLEAU_OFFSET_Y 215
 #define TABLEAU_OFFSET_DELTA_Y 15
 
 #define ESTOQUE_OFFSET \
@@ -42,8 +42,11 @@ typedef struct {
 
   // pilha fundacao
   PilhaGEnc *fundacao[4];
+
   // pilha e lista pro tableau
   PilhaGEnc *tableau[7];
+  Carta *tableauTopo;
+
   Texturas texturas;
 
   Carta *cartaEmMovimento;

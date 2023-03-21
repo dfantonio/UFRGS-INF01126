@@ -16,11 +16,11 @@ void renderizaCartasTableau(void *info, void *jogoVar) {
 
 void renderizaTableau(Jogo *jogo) {
   Vector2 mousePos = GetMousePosition();
-
+    
   for (int i = 0; i < NUM_COLUNAS_TABLEAU; i++) {
+    DrawTexture(jogo->texturas.texturaSlot, TABLEAU_OFFSET_X + (CARTA_LARGURA * i), TABLEAU_OFFSET_Y, WHITE);
     // Percorre todas as pilhas e renderiza as cartas
     percorrePilhaReversoGEnc(jogo->tableau[i], renderizaCartasTableau, jogo);
-
     // Caso a pilha esteja vazia nao verifica movimento
     if (jogo->tableau[i]->topo) {
       Carta *cartaTopo = jogo->tableau[i]->topo->info;
