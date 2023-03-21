@@ -28,7 +28,7 @@ void renderizaEstoque(Jogo *jogo) {
 
   Vector2 mousePos = GetMousePosition();
 
-  // Verifica um clique no estoque quando não tem nenhuma carta pra virar
+  // Verifica um clique no estoque quando nÃ£o tem nenhuma carta pra virar
   if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && CheckCollisionPointRec(mousePos, ESTOQUE_OFFSET)) {
     if (vaziaPilhaGEnc(jogo->estoque)) {
       while (!vaziaPilhaGEnc(jogo->descarte)) {
