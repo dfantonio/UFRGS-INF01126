@@ -17,16 +17,16 @@ void renderizaFundacao(Jogo *jogo) {
   Vector2 mousePos = GetMousePosition();
 
   for (int i = 0; i < 4; i++) {
-    // Desenha os slots da funcaï¿½ï¿½o
+    // Desenha os slots da fundacao
     DrawTexture(jogo->texturas.texturaSlot, FUNDACAO_OFFSET_X + (CARTA_LARGURA * i), FUNDACAO_OFFSET_Y, WHITE);
     // Percorre todas as pilhas e renderiza as cartas
     percorrePilhaReversoGEnc(jogo->fundacao[i], renderizaCartasFundacao, jogo);
 
-    // Caso a pilha esteja vazia não verifica movimento
+    // Caso a pilha esteja vazia nao verifica movimento
     if (jogo->fundacao[i]->topo) {
       Carta *cartaTopo = jogo->fundacao[i]->topo->info;
 
-      // Verifica momento pra trocar uma carta entre as fundações
+      // Verifica momento pra trocar uma carta entre as fundacoes
       if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && cartaTopo && CheckCollisionPointRec(mousePos, cartaTopo->coordsMesa)) {
         if (jogo->cartaEmMovimento == NULL) {
           jogo->cartaEmMovimento = cartaTopo;
@@ -44,15 +44,15 @@ void verificaMovimentoPFundacao(Jogo *jogo, int index) {
     if (jogo->fundacao[index]->topo) numero = ((Carta *)jogo->fundacao[index]->topo->info)->numero;
 
     // Comentei algumas regras pra poder testar
-    // // Se a carta nï¿½o for 1 nï¿½mero maior do q o topo da pilha
+    // // Se a carta nao for 1 numero maior do q o topo da pilha
     // if (jogo->cartaEmMovimento->numero != (numero + 1)) return;
     // // Se os naipes forem diferentes cancela o movimento
     // if (jogo->fundacao[index]->topo && ((Carta *)jogo->fundacao[index]->topo->info)->naipe != jogo->cartaEmMovimento->naipe) return;
 
-    // Move a carta pra pilha da fundaï¿½ï¿½o
+    // Move a carta pra pilha da fundacao
     empilhaPilhaGEnc(jogo->fundacao[index], jogo->cartaEmMovimento);
 
-    // Arruma as informaï¿½ï¿½es de posiï¿½ï¿½o da carta
+    // Arruma as informaï¿½ï¿½es de posicao da carta
     jogo->cartaEmMovimento->coordsMesa.x = FUNDACAO_OFFSET_X + (CARTA_LARGURA * index);
     jogo->cartaEmMovimento->coordsMesa.y = FUNDACAO_OFFSET_Y;
     jogo->cartaEmMovimento->posicao = FUNDACAO;
@@ -65,24 +65,24 @@ void verificaMovimentoPFundacao(Jogo *jogo, int index) {
   }
   // Caso a carta venha da fundação
   if (jogo->cartaEmMovimento && jogo->cartaEmMovimento->posicao == FUNDACAO) {
-    // Só troca a pilha se for um Ás
+    // Só troca a pilha se for um As
     if (jogo->cartaEmMovimento->numero != 1) return;
 
     int indexOrigem = (jogo->cartaEmMovimento->posicaoAnterior.x - FUNDACAO_OFFSET_X) / CARTA_LARGURA;
 
-  // Se já tiver uma carta naquela fundação
+  // Se já tiver uma carta naquela fundacao
 
     if (jogo->fundacao[index]->topo != NULL) return;
 
     // Move a carta pra nova pilha
     empilhaPilhaGEnc(jogo->fundacao[index], jogo->cartaEmMovimento);
 
-    // Arruma as informações de posição da carta
+    // Arruma as informações de posicao da carta
     jogo->cartaEmMovimento->coordsMesa.x = FUNDACAO_OFFSET_X + (CARTA_LARGURA * index);
     jogo->cartaEmMovimento->coordsMesa.y = FUNDACAO_OFFSET_Y;
     jogo->cartaEmMovimento->posicao = FUNDACAO;
 
-    // Remove a carta da fundação antiga
+    // Remove a carta da fundacao antiga
     desempilhaPilhaGEnc(jogo->fundacao[indexOrigem]);
 
     // Finaliza o movimento

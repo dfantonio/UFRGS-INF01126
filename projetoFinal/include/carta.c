@@ -34,7 +34,7 @@ ListaGEnc *criaBaralho() {
   return baralho;
 };
 
-// Como printf não funciona, acho que pode remover e deixar o callback como argumento msm
+// Como printf nao funciona, acho que pode remover e deixar o callback como argumento msm
 void imprimeCartas(void *info) {
   Carta *carta = (Carta *)info;
   printf("naipe: %d, Numero: %d\n", carta->naipe, carta->numero);
