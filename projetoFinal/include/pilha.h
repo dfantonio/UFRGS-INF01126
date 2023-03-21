@@ -3,16 +3,16 @@
 #ifndef _PILHA_H_
 #define _PILHA_H_
 
-typedef struct NodoPGEnc {
+typedef struct nodoPGEnc {
   void *info;
-  struct NodoPGEnc *prox;
+  struct nodoPGEnc *prox;
 } NodoPGEnc;
 
 typedef struct {
   NodoPGEnc *topo;
 } PilhaGEnc;
 
-// Pilha genérica
+// Pilha genï¿½rica
 
 // Funcao que cria uma pilha
 PilhaGEnc *criaPilhaGEnc();

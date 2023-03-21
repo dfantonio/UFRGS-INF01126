@@ -12,8 +12,14 @@
 #define ESTOQUE_OFFSET_X 0
 #define ESTOQUE_OFFSET_Y 10
 
+#define TABLEAU_OFFSET_X 300
+#define TABLEAU_OFFSET_Y 350
+
 #define ESTOQUE_OFFSET \
   CLITERAL(Rectangle) { ESTOQUE_OFFSET_X, ESTOQUE_OFFSET_Y, CARTA_LARGURA, CARTA_ALTURA }
+
+#define NUM_COLUNAS_TABLEAU 7
+#define NUM_COLUNAS_FUNDACAO 4
 
 typedef struct {
   Texture2D texturaCartas;
@@ -32,14 +38,14 @@ typedef struct {
 
   // pilha fundacao
   PilhaGEnc *fundacao[4];
+  PilhaGEnc *tableau[7];
   // pilha e lista pro tableau
   Texturas texturas;
 
   Carta *cartaEmMovimento;
 } Jogo;
 
-void criaCartas(Jogo *jogo);
-
+void criaLayoutJogo(Jogo *jogo);
 Vector2 Rectangle2Vector(Rectangle rec);
 
 #endif

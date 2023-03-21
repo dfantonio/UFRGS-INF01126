@@ -8,7 +8,7 @@ void renderizaCartasEstoque(void *info, void *jogoVar) {
   Carta *carta = (Carta *)info;
   Jogo *jogo = (Jogo *)jogoVar;
 
-  // Caso a carta renderizada não seja a que está em movimento
+  // Caso a carta renderizada nÃ£o seja a que estÃ¡ em movimento
   if (jogo->cartaEmMovimento != carta)
     renderizaCarta(info, jogoVar);
 
@@ -28,7 +28,7 @@ void renderizaEstoque(Jogo *jogo) {
 
   Vector2 mousePos = GetMousePosition();
 
-  // Verifica um clique no estoque quando não tem nenhuma carta pra virar
+  // Verifica um clique no estoque quando nÃƒÂ£o tem nenhuma carta pra virar
   if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && CheckCollisionPointRec(mousePos, ESTOQUE_OFFSET)) {
     if (vaziaPilhaGEnc(jogo->estoque)) {
       while (!vaziaPilhaGEnc(jogo->descarte)) {
