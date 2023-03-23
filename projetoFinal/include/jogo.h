@@ -1,6 +1,7 @@
 #include "carta.h"
-#include "fila.h"
+#include "lista.h"
 #include "pilha.h"
+#include "fila.h"
 #include "raylib.h"
 
 #ifndef _JOGO_H_
@@ -44,8 +45,8 @@ typedef struct {
   PilhaGEnc *fundacao[4];
 
   // pilha e lista pro tableau
-  PilhaGEnc *tableau[7];
-  Carta *tableauTopo;
+  PilhaGEnc *pilhaTableau[NUM_COLUNAS_TABLEAU];
+  FilaGEnc *filaTableau[NUM_COLUNAS_TABLEAU];
 
   Texturas texturas;
 

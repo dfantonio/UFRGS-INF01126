@@ -4,12 +4,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void inicializaListasEPilhas(Jogo *jogo);
+void inicializaListasFilasEPilhas(Jogo *jogo);
 void embaralhaBaralho(ListaGEnc *listaCartas, NodoLGEnc *temp[]);
 bool isUltimaCartaColuna(int atual, int inicial, int coluna);
 
 void criaLayoutJogo(Jogo *jogo) {
-  inicializaListasEPilhas(jogo);
+  inicializaListasFilasEPilhas(jogo);
 
   NodoLGEnc *temp[TAMANHO_BARALHO] = {0};
 
@@ -34,17 +34,19 @@ void criaLayoutJogo(Jogo *jogo) {
         indiceCartaInicialTableau = i; //for deve inicializar apos a última carta inserida
         break;
       }
-
-      if(isUltimaCartaColuna(i, indiceCartaInicialTableau, coluna)) //ultima carta da coluna fica virada pra cima
-        ((Carta *)temp[i]->info)->viradaParaBaixo = false;
-      else ((Carta *)temp[i]->info)->viradaParaBaixo = true;
       ((Carta *)temp[i]->info)->posicao = TABLEAU; //carta esta no tableau
-
       Rectangle colunasTableau = TABLEAU_OFFSET;
       colunasTableau.x = j*CARTA_LARGURA + TABLEAU_OFFSET.x; //desloca colunas
       colunasTableau.y = (i-indiceCartaInicialTableau)*TABLEAU_OFFSET_DELTA_Y + TABLEAU_OFFSET_Y; //desloca cartas na pilha
       ((Carta *)temp[i]->info)->coordsMesa = colunasTableau;
-      empilhaPilhaGEnc(jogo->tableau[j], temp[i]->info);
+      if(isUltimaCartaColuna(i, indiceCartaInicialTableau, coluna)) { //ultima carta da coluna fica virada pra cima
+        ((Carta *)temp[i]->info)->viradaParaBaixo = false;
+        enfileiraFilaGEnc(jogo->filaTableau[j], temp[i]->info);
+      }
+      else {
+        ((Carta *)temp[i]->info)->viradaParaBaixo = true;
+        empilhaPilhaGEnc(jogo->pilhaTableau[j], temp[i]->info);
+      } 
     }
   }
 }
@@ -58,7 +60,7 @@ Vector2 Rectangle2Vector(Rectangle rec) {
   return vec;
 }
 
-void inicializaListasEPilhas(Jogo *jogo){
+void inicializaListasFilasEPilhas(Jogo *jogo){
   // Inicia todas as listas/pilhas
   jogo->estoque = criaPilhaGEnc();
   jogo->descarte = criaPilhaGEnc();
@@ -66,8 +68,10 @@ void inicializaListasEPilhas(Jogo *jogo){
   int i;
   for (i = 0; i < NUM_COLUNAS_FUNDACAO; i++)
     jogo->fundacao[i] = criaPilhaGEnc();
-  for(i = 0; i < NUM_COLUNAS_TABLEAU; i++)
-    jogo->tableau[i] = criaPilhaGEnc();
+  for(i = 0; i < NUM_COLUNAS_TABLEAU; i++){
+    jogo->pilhaTableau[i] = criaPilhaGEnc();
+    jogo->filaTableau[i] = criaFilaGEnc();
+  }
   
   jogo->descarteTopo = NULL;
   jogo->estoqueTopo = NULL;
