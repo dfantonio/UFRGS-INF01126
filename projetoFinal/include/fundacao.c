@@ -52,7 +52,7 @@ void verificaMovimentoPFundacao(Jogo *jogo, int index) {
     // Move a carta pra pilha da fundacao
     empilhaPilhaGEnc(jogo->fundacao[index], jogo->cartaEmMovimento);
 
-    // Arruma as informaï¿½ï¿½es de posicao da carta
+    // Arruma as informacoes de posicao da carta
     jogo->cartaEmMovimento->coordsMesa.x = FUNDACAO_OFFSET_X + (CARTA_LARGURA * index);
     jogo->cartaEmMovimento->coordsMesa.y = FUNDACAO_OFFSET_Y;
     jogo->cartaEmMovimento->posicao = FUNDACAO;
