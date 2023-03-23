@@ -1,25 +1,56 @@
 #include "fila.h"
+#include <stdio.h>
 #include <stdlib.h>
 
-ListaGEnc *criaListaGEnc() {
-  ListaGEnc *lista = (ListaGEnc *)malloc(sizeof(ListaGEnc));
-  if (lista)
-    lista->prim = NULL;
-  return lista;
+// Funcao que cria uma fila
+FilaGEnc* criaFilaGEnc(){
+   FilaGEnc *fila = (FilaGEnc*)malloc(sizeof(FilaGEnc));
+   if (fila != NULL){ // Idealmente, sempre checar!
+      fila->ini = NULL;
+      fila->fim = NULL;
+   }
+   return fila;
 }
 
-int insereInicioListaGEnc(ListaGEnc *lista, void *info) {
-  NodoLGEnc *novo = (NodoLGEnc *)malloc(sizeof(NodoLGEnc));
-  if (novo == NULL) // Idealmente, sempre checar!
-    return 0;
-  novo->info = info;
-  novo->prox = lista->prim;
-  lista->prim = novo;
-  return 1;
+// Funcao que destroi uma fila
+void destroiFilaGEnc(FilaGEnc *fila){
+   NodoFEnc *aux = fila->ini;
+   while(aux != NULL){
+       NodoFEnc *tmp = aux->prox;
+       free(aux); // Cuidar ordem do free
+       aux = tmp;
+   }
+   free(fila);
 }
 
-void percorreListaGEnc(ListaGEnc *lista, void (*cb)(void *)) {
-  NodoLGEnc *aux;
-  for (aux = lista->prim; aux != NULL; aux = aux->prox)
-    cb(aux->info);
+// Funcao que insere um elemento na fila
+void enfileiraFilaGEnc(FilaGEnc *fila, void* info){
+   NodoFEnc *novo = (NodoFEnc*)malloc(sizeof(NodoFEnc));
+   if (fila != NULL){
+      novo->info = info;
+      novo->prox = NULL;
+      if (fila->fim != NULL)
+         fila->fim->prox = novo;
+      else
+         fila->ini = novo;
+      fila->fim = novo;
+   }
 }
+
+
+// Funcao que remove um elemento da fila
+void *desenfileiraFilaGEnc(FilaGEnc *fila){
+   NodoFEnc *aux = fila->ini; 
+   void* info = aux->info;
+   fila->ini = aux->prox;
+   if (fila->ini == NULL)
+      fila->fim = NULL;
+   free(aux);
+   return info;
+}
+
+// Funcao que determina se uma fila eh vazia
+int vaziaFilaGEnc(FilaGEnc *fila){
+   return (fila->ini == NULL);
+}
+
