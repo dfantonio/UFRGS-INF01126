@@ -23,6 +23,8 @@ void enfileiraFilaGEnc(FilaGEnc *fila, void *info);
 // Funcao que remove um elemento da fila
 void *desenfileiraFilaGEnc(FilaGEnc *fila);
 
+void percorreFilaGEnc(FilaGEnc *fila, void (*cb)(void *, void *), void *jogo);
+
 // Funcao que determina se uma fila eh vazia
 int vaziaFilaGEnc(FilaGEnc* fila);
 

@@ -20,10 +20,11 @@ void renderizaTableau(Jogo *jogo) {
   for (int i = 0; i < NUM_COLUNAS_TABLEAU; i++) {
     DrawTexture(jogo->texturas.texturaSlot, TABLEAU_OFFSET_X + (CARTA_LARGURA * i), TABLEAU_OFFSET_Y, WHITE);
     // Percorre todas as pilhas e renderiza as cartas
-    percorrePilhaReversoGEnc(jogo->tableau[i], renderizaCartasTableau, jogo);
+    percorrePilhaReversoGEnc(jogo->pilhaTableau[i], renderizaCartasTableau, jogo);
+    percorreFilaGEnc(jogo->filaTableau[i], renderizaCartasTableau, jogo);
     // Caso a pilha esteja vazia nao verifica movimento
-    if (jogo->tableau[i]->topo) {
-      Carta *cartaTopo = jogo->tableau[i]->topo->info;
+    if (jogo->pilhaTableau[i]->topo) {
+      Carta *cartaTopo = jogo->filaTableau[i]->ini->info;
       // Verifica momento pra trocar uma carta entre as colunas do tableau
       if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && cartaTopo && CheckCollisionPointRec(mousePos, cartaTopo->coordsMesa)) {
         if (jogo->cartaEmMovimento == NULL) {
@@ -31,6 +32,16 @@ void renderizaTableau(Jogo *jogo) {
           jogo->cartaEmMovimento->posicaoAnterior = Rectangle2Vector(jogo->cartaEmMovimento->coordsMesa);
         }
       }
+    }
+  }
+}
+
+void movimentaCarta(Jogo *jogo, int index) {
+  Vector2 mousePos = GetMousePosition();
+  if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && jogo->pilhaTableau[index] && CheckCollisionPointRec(mousePos, jogo->descarteTopo->coordsMesa)) {
+    if (jogo->cartaEmMovimento == NULL) {
+      jogo->cartaEmMovimento = jogo->descarteTopo;
+      jogo->cartaEmMovimento->posicaoAnterior = Rectangle2Vector(jogo->cartaEmMovimento->coordsMesa);
     }
   }
 }

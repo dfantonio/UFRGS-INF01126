@@ -37,7 +37,6 @@ void enfileiraFilaGEnc(FilaGEnc *fila, void* info){
    }
 }
 
-
 // Funcao que remove um elemento da fila
 void *desenfileiraFilaGEnc(FilaGEnc *fila){
    NodoFEnc *aux = fila->ini; 
@@ -47,6 +46,21 @@ void *desenfileiraFilaGEnc(FilaGEnc *fila){
       fila->fim = NULL;
    free(aux);
    return info;
+}
+
+void percorreFilaGEnc(FilaGEnc *fila, void (*cb)(void *, void *), void *jogo) {
+  void *info;
+  FilaGEnc *filaAux = criaFilaGEnc();
+  while(!vaziaFilaGEnc(fila)) {
+    info = desenfileiraFilaGEnc(fila);
+    cb(info, jogo);
+    enfileiraFilaGEnc(filaAux, info);
+  }
+  while(!vaziaFilaGEnc(filaAux)){
+    info = desenfileiraFilaGEnc(filaAux);
+    enfileiraFilaGEnc(fila, info);
+  }
+  destroiFilaGEnc(filaAux);
 }
 
 // Funcao que determina se uma fila eh vazia
