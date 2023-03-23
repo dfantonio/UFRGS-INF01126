@@ -1,5 +1,5 @@
 #include "carta.h"
-#include "fila.h"
+#include "lista.h"
 #include "jogo.h"
 #include <stdio.h>
 #include <stdlib.h>
