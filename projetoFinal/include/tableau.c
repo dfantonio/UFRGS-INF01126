@@ -36,12 +36,31 @@ void renderizaTableau(Jogo *jogo) {
   }
 }
 
-void movimentaCarta(Jogo *jogo, int index) {
-  Vector2 mousePos = GetMousePosition();
-  if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && jogo->pilhaTableau[index] && CheckCollisionPointRec(mousePos, jogo->descarteTopo->coordsMesa)) {
-    if (jogo->cartaEmMovimento == NULL) {
-      jogo->cartaEmMovimento = jogo->descarteTopo;
-      jogo->cartaEmMovimento->posicaoAnterior = Rectangle2Vector(jogo->cartaEmMovimento->coordsMesa);
-    }
+void verificaMovimentoPTableau(Jogo *jogo, int index) {
+  // Caso a carta venha do estoque
+  if (jogo->cartaEmMovimento && jogo->cartaEmMovimento->posicao == ESTOQUE) {
+    int numero = 0;
+    Carta *ultimaCartaColuna = (Carta *)jogo->filaTableau[index]->fim->info;
+    if (jogo->filaTableau[index]->fim) numero = ultimaCartaColuna->numero;
+
+    // Comentei algumas regras pra poder testar
+    // // Se a carta nao for 1 numero maior do q o topo da pilha
+    // if (jogo->cartaEmMovimento->numero != (numero + 1)) return;
+    // // Se os naipes forem diferentes cancela o movimento
+    // if (jogo->fundacao[index]->topo && ((Carta *)jogo->fundacao[index]->topo->info)->naipe != jogo->cartaEmMovimento->naipe) return;
+
+    // Move a carta pra fila do tableau
+    enfileiraFilaGEnc(jogo->filaTableau[index], jogo->cartaEmMovimento);
+
+    // Arruma as informacoes de posicao da carta
+    jogo->cartaEmMovimento->coordsMesa.x = ultimaCartaColuna->coordsMesa.x;
+    jogo->cartaEmMovimento->coordsMesa.y = ultimaCartaColuna->coordsMesa.y + TABLEAU_OFFSET_DELTA_Y;
+    jogo->cartaEmMovimento->posicao = TABLEAU;
+
+  // Remove a carta da pilha do estoque
+    desempilhaPilhaGEnc(jogo->descarte);
+
+    // Finaliza o movimento
+    jogo->cartaEmMovimento = NULL;
   }
 }

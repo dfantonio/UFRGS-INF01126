@@ -4,5 +4,6 @@
 #define _TABLEAU_H_
 
 void renderizaTableau(Jogo *jogo);
+void verificaMovimentoPTableau(Jogo *jogo, int index);
 
 #endif
