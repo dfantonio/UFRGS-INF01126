@@ -5,6 +5,13 @@
 #include "raylib.h"
 #include <stdlib.h>
 
+bool isRei(int numeroCarta);
+bool isNumeroDaCartaProximoDaFila(Carta *cartaEmMovimento, int numero);
+bool isCorDaCartaProximaDaFila(Carta *cartaEmMovimento, Carta *ultimaCartaColuna);
+bool isCartasPretas(Carta *carta);
+bool isProximaDaFila(Carta *cartaEmMovimento, Carta *ultimaCartaColuna);
+bool isMovimentoValido(Jogo *jogo, int coluna, Carta *ultimaCartaColuna);
+
 void renderizaCartasTableau(void *info, void *jogoVar) {
   Carta *carta = (Carta *)info;
   Jogo *jogo = (Jogo *)jogoVar;
@@ -36,31 +43,65 @@ void renderizaTableau(Jogo *jogo) {
   }
 }
 
-void verificaMovimentoPTableau(Jogo *jogo, int index) {
+void verificaMovimentoPTableau(Jogo *jogo, int coluna) {
   // Caso a carta venha do estoque
   if (jogo->cartaEmMovimento && jogo->cartaEmMovimento->posicao == ESTOQUE) {
-    int numero = 0;
-    Carta *ultimaCartaColuna = (Carta *)jogo->filaTableau[index]->fim->info;
-    if (jogo->filaTableau[index]->fim) numero = ultimaCartaColuna->numero;
-
-    // Comentei algumas regras pra poder testar
-    // // Se a carta nao for 1 numero maior do q o topo da pilha
-    // if (jogo->cartaEmMovimento->numero != (numero + 1)) return;
-    // // Se os naipes forem diferentes cancela o movimento
-    // if (jogo->fundacao[index]->topo && ((Carta *)jogo->fundacao[index]->topo->info)->naipe != jogo->cartaEmMovimento->naipe) return;
-
-    // Move a carta pra fila do tableau
-    enfileiraFilaGEnc(jogo->filaTableau[index], jogo->cartaEmMovimento);
-
-    // Arruma as informacoes de posicao da carta
-    jogo->cartaEmMovimento->coordsMesa.x = ultimaCartaColuna->coordsMesa.x;
-    jogo->cartaEmMovimento->coordsMesa.y = ultimaCartaColuna->coordsMesa.y + TABLEAU_OFFSET_DELTA_Y;
-    jogo->cartaEmMovimento->posicao = TABLEAU;
-
-  // Remove a carta da pilha do estoque
-    desempilhaPilhaGEnc(jogo->descarte);
-
-    // Finaliza o movimento
-    jogo->cartaEmMovimento = NULL;
+    Carta *ultimaCartaColuna = (Carta *)jogo->filaTableau[coluna]->fim->info;
+    if(isMovimentoValido(jogo, coluna, ultimaCartaColuna)) {
+      // inicializa coordenadas
+      int xTableau = coluna*CARTA_LARGURA + TABLEAU_OFFSET.x;
+      int yTableau = TABLEAU_OFFSET_Y;
+      if(isProximaDaFila(jogo->cartaEmMovimento, ultimaCartaColuna)) {
+        // Arruma as informacoes de posicao da carta
+        xTableau = ultimaCartaColuna->coordsMesa.x;
+        yTableau = ultimaCartaColuna->coordsMesa.y + TABLEAU_OFFSET_DELTA_Y;
+      }
+      // Move a carta pra fila do tableau
+      enfileiraFilaGEnc(jogo->filaTableau[coluna], jogo->cartaEmMovimento);
+      jogo->cartaEmMovimento->coordsMesa.x = xTableau;
+      jogo->cartaEmMovimento->coordsMesa.y = yTableau;
+      jogo->cartaEmMovimento->posicao = TABLEAU;
+      // Remove a carta da pilha do estoque
+      desempilhaPilhaGEnc(jogo->descarte);
+      // Finaliza o movimento
+      jogo->cartaEmMovimento = NULL;
+    }
   }
+}
+
+bool isRei(int numeroCarta) {
+  return numeroCarta == 13;
+}
+
+bool isNumeroDaCartaProximoDaFila(Carta *cartaEmMovimento, int numUltimaCartaColuna) {
+  return cartaEmMovimento->numero == (numUltimaCartaColuna - 1);
+}
+
+bool isCorDaCartaProximaDaFila(Carta *cartaEmMovimento, Carta *ultimaCartaColuna) {
+  return 
+    (isCartasPretas(cartaEmMovimento) && !isCartasPretas(ultimaCartaColuna)) ||
+    (!isCartasPretas(cartaEmMovimento) && isCartasPretas(ultimaCartaColuna));
+}
+
+bool isCartasPretas(Carta *carta) {
+  return carta->naipe == ESPADAS || carta->naipe == PAUS;
+}
+
+bool isProximaDaFila(Carta *cartaEmMovimento, Carta *ultimaCartaColuna) {
+  int numUltimaCartaColuna = 0;
+  if (ultimaCartaColuna->numero) 
+    numUltimaCartaColuna = ultimaCartaColuna->numero;
+  return (
+    isNumeroDaCartaProximoDaFila(cartaEmMovimento, numUltimaCartaColuna) && isCorDaCartaProximaDaFila(cartaEmMovimento, ultimaCartaColuna)
+  ); 
+}
+
+// Quando uma coluna estiver vazia, é permitido começar a montá-la colocando um rei (K) 
+// de qualquer naipe em sua casa OU a carta é a próxima da fila
+bool isMovimentoValido(Jogo *jogo, int coluna, Carta *ultimaCartaColuna) {
+  Carta *cartaEmMovimento = jogo->cartaEmMovimento;
+  return (
+    (vaziaPilhaGEnc(jogo->pilhaTableau[coluna]) && isRei(jogo->cartaEmMovimento->numero)) || 
+    (isProximaDaFila(cartaEmMovimento, ultimaCartaColuna))
+  );
 }
