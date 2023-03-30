@@ -43,11 +43,10 @@ void verificaMovimentoPFundacao(Jogo *jogo, int index) {
     int numero = 0;
     if (jogo->fundacao[index]->topo) numero = ((Carta *)jogo->fundacao[index]->topo->info)->numero;
 
-    // Comentei algumas regras pra poder testar
-    // // Se a carta nao for 1 numero maior do q o topo da pilha
-    // if (jogo->cartaEmMovimento->numero != (numero + 1)) return;
-    // // Se os naipes forem diferentes cancela o movimento
-    // if (jogo->fundacao[index]->topo && ((Carta *)jogo->fundacao[index]->topo->info)->naipe != jogo->cartaEmMovimento->naipe) return;
+    // Se a carta nao for 1 numero maior do q o topo da pilha
+    if (jogo->cartaEmMovimento->numero != (numero + 1)) return;
+    // Se os naipes forem diferentes cancela o movimento
+    if (jogo->fundacao[index]->topo && ((Carta *)jogo->fundacao[index]->topo->info)->naipe != jogo->cartaEmMovimento->naipe) return;
 
     // Move a carta pra pilha da fundacao
     empilhaPilhaGEnc(jogo->fundacao[index], jogo->cartaEmMovimento);

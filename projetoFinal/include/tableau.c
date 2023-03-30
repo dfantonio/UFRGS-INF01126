@@ -33,14 +33,14 @@ void renderizaTableau(Jogo *jogo) {
     percorrePilhaReversoGEnc(jogo->pilhaTableau[i], renderizaCartasTableau, jogo);
     percorreFilaGEnc(jogo->filaTableau[i], renderizaCartasTableau, jogo);
     // Caso a pilha esteja vazia nao verifica movimento
-    if (jogo->pilhaTableau[i]->topo) {
-      Carta *cartaTopo = jogo->filaTableau[i]->ini->info;
-      // Verifica momento pra trocar uma carta entre as colunas do tableau
-      if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && cartaTopo && CheckCollisionPointRec(mousePos, cartaTopo->coordsMesa)) {
-        if (jogo->cartaEmMovimento == NULL) {
-          jogo->cartaEmMovimento = cartaTopo;
-          jogo->cartaEmMovimento->posicaoAnterior = Rectangle2Vector(jogo->cartaEmMovimento->coordsMesa);
-        }
+    if (vaziaFilaGEnc(jogo->filaTableau[i])) return;
+     
+    Carta *cartaTopo = jogo->filaTableau[i]->ini->info;
+    // Verifica momento pra trocar uma carta entre as colunas do tableau
+    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && cartaTopo && CheckCollisionPointRec(mousePos, cartaTopo->coordsMesa)) {
+      if (jogo->cartaEmMovimento == NULL) {
+        jogo->cartaEmMovimento = cartaTopo;
+        jogo->cartaEmMovimento->posicaoAnterior = Rectangle2Vector(jogo->cartaEmMovimento->coordsMesa);
       }
     }
   }
