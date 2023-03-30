@@ -1,4 +1,5 @@
 #include "pilha.h"
+#include "jogo.h"
 #include <stdbool.h>
 #include <stdlib.h>
 
@@ -58,29 +59,22 @@ void percorrePilhaGEnc(PilhaGEnc *pilha, void (*cb)(void *, void *), void *jogo)
 
 void percorrePilhaReversoGEnc(PilhaGEnc *pilha, void (*cb)(void *, void *), void *jogo) {
   PilhaGEnc *temp = criaPilhaGEnc();
-  NodoPGEnc *aux = pilha->topo;
+  Carta *carta;
 
   // Caso a pilha seja vazia nao faz nada
-  if (aux == NULL) return;
+  if (vaziaPilhaGEnc(pilha)) return;
 
   // Inverte a pilha pra base ser o topo
   do {
     empilhaPilhaGEnc(temp, desempilhaPilhaGEnc(pilha));
-    aux = pilha->topo;
-  } while (aux != NULL);
+  } while (!vaziaPilhaGEnc(pilha));
 
-  // Chama os callback na ordem invertida (correta)
-  aux = temp->topo;
+  // Chama os callback na ordem invertida (correta) e já empilha novamente
   do {
-    cb(aux->info, jogo);
-    aux = aux->prox;
-  } while (aux != NULL);
-
-  aux = temp->topo;
-  do {
-    empilhaPilhaGEnc(pilha, desempilhaPilhaGEnc(temp));
-    aux = temp->topo;
-  } while (aux != NULL);
+    carta = desempilhaPilhaGEnc(temp);
+    cb(carta, jogo);
+    empilhaPilhaGEnc(pilha, carta);
+  } while (!vaziaPilhaGEnc(temp));
 
   destroiPilhaGEnc(temp);
 }
