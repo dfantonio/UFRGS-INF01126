@@ -14,6 +14,8 @@ bool podePosicionarTableau(Jogo *jogo, int coluna);
 bool isOrigemCartaTableauOuEstoque(EstadosCarta posicaoCarta);
 bool isOrigemCartaEstoque(EstadosCarta posicaoCarta);
 bool isOrigemCartaTableau(EstadosCarta posicaoCarta);
+bool isOrigemCartaFundacao(EstadosCarta posicaoCarta);
+void retiraCartaFundacao(Jogo *jogo);
 
 void renderizaCartasTableau(void *info, void *jogoVar) {
   Carta *carta = (Carta *)info;
@@ -34,7 +36,6 @@ void renderizaTableau(Jogo *jogo) {
     percorreFilaGEnc(jogo->filaTableau[i], renderizaCartasTableau, jogo);
     // Caso a pilha esteja vazia nao verifica movimento
     if (vaziaFilaGEnc(jogo->filaTableau[i])) return;
-     
     Carta *cartaTopo = jogo->filaTableau[i]->ini->info;
     // Verifica momento pra trocar uma carta entre as colunas do tableau
     if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && cartaTopo && CheckCollisionPointRec(mousePos, cartaTopo->coordsMesa)) {
@@ -46,18 +47,16 @@ void renderizaTableau(Jogo *jogo) {
   }
 }
 
-void verificaMovimentoPTableau(Jogo *jogo, int coluna) {
+void verificaMovimentoPTableau(Jogo *jogo, int indexDestino) {
   if (jogo->cartaEmMovimento == NULL)
     return;
-  if(!isOrigemCartaTableauOuEstoque(jogo->cartaEmMovimento->posicao))
-    return;
-  if(!podePosicionarTableau(jogo, coluna))
+  if(!podePosicionarTableau(jogo, indexDestino))
     return; 
   
   // inicializa coordenadas
-  int xTableau = coluna*CARTA_LARGURA + TABLEAU_OFFSET.x;
+  int xTableau = indexDestino*CARTA_LARGURA + TABLEAU_OFFSET.x;
   int yTableau = TABLEAU_OFFSET_Y;
-  Carta *ultimaCartaColuna = (Carta *)jogo->filaTableau[coluna]->fim->info;
+  Carta *ultimaCartaColuna = (Carta *)jogo->filaTableau[indexDestino]->fim->info;
   
   if(isProximaDaFila(jogo->cartaEmMovimento, ultimaCartaColuna)) {
     // Arruma as informacoes de posicao da carta
@@ -66,11 +65,13 @@ void verificaMovimentoPTableau(Jogo *jogo, int coluna) {
   }
   
   // Move a carta pra fila do tableau
-  enfileiraFilaGEnc(jogo->filaTableau[coluna], jogo->cartaEmMovimento);
+  enfileiraFilaGEnc(jogo->filaTableau[indexDestino], jogo->cartaEmMovimento);
   jogo->cartaEmMovimento->coordsMesa.x = xTableau;
   jogo->cartaEmMovimento->coordsMesa.y = yTableau;
   if(isOrigemCartaEstoque(jogo->cartaEmMovimento->posicao))
     desempilhaPilhaGEnc(jogo->descarte);
+  else if(isOrigemCartaFundacao(jogo->cartaEmMovimento->posicao))
+    retiraCartaFundacao(jogo);
   jogo->cartaEmMovimento->posicao = TABLEAU;
   // Finaliza o movimento
   jogo->cartaEmMovimento = NULL;
@@ -124,4 +125,19 @@ bool isOrigemCartaEstoque(EstadosCarta posicaoCarta) {
 
 bool isOrigemCartaTableau(EstadosCarta posicaoCarta) {
   return posicaoCarta == TABLEAU;
+}
+
+bool isOrigemCartaFundacao(EstadosCarta posicaoCarta) {
+  return posicaoCarta == FUNDACAO;
+}
+
+void retiraCartaFundacao(Jogo *jogo) {
+  for (int i = 0; i < NUM_COLUNAS_FUNDACAO; i++) {
+    Rectangle posicaoFundacao = {FUNDACAO_OFFSET_X + (CARTA_LARGURA * i), FUNDACAO_OFFSET_Y, CARTA_LARGURA, CARTA_ALTURA};
+    Rectangle posicaoAnteriorCarta = {jogo->cartaEmMovimento->posicaoAnterior.x, jogo->cartaEmMovimento->posicaoAnterior.y, CARTA_LARGURA, CARTA_ALTURA};
+    if (jogo->cartaEmMovimento && CheckCollisionRecs(posicaoAnteriorCarta, posicaoFundacao)) {
+      desempilhaPilhaGEnc(jogo->fundacao[i]);
+      break;
+    }
+  }
 }
