@@ -44,8 +44,7 @@ void renderizaTableau(Jogo *jogo) {
 }
 
 void verificaMovimentoPTableau(Jogo *jogo, int indexDestino) {
-  if (jogo->cartaEmMovimento == NULL)
-    return;
+  if (jogo->cartaEmMovimento == NULL) return;
   if(!podePosicionarTableau(jogo, indexDestino))
     return; 
   
@@ -68,6 +67,13 @@ void verificaMovimentoPTableau(Jogo *jogo, int indexDestino) {
     desempilhaPilhaGEnc(jogo->descarte);
   else if(isOrigemCartaFundacao(jogo->cartaEmMovimento->posicao))
     retiraCartaFundacao(jogo);
+  else if(isOrigemCartaTableau(jogo->cartaEmMovimento->posicao)) {
+    int indexOrigem = (jogo->cartaEmMovimento->posicaoAnterior.x - TABLEAU_OFFSET_X) / CARTA_LARGURA;
+    jogo->cartaEmMovimento->posicao = TABLEAU;
+    desenfileiraFilaGEnc(jogo->filaTableau[indexOrigem]);
+    if(vaziaFilaGEnc(jogo->filaTableau[indexOrigem]))
+      viraCartaTableauPilhaParaFila(jogo, indexOrigem);
+  }
   jogo->cartaEmMovimento->posicao = TABLEAU;
   // Finaliza o movimento
   jogo->cartaEmMovimento = NULL;

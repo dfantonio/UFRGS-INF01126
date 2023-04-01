@@ -5,6 +5,6 @@
 
 void renderizaFundacao(Jogo *jogo);
 
-void verificaMovimentoPFundacao(Jogo *jogo, int index);
+void verificaMovimentoPFundacao(Jogo *jogo, int indexDestino);
 
 #endif
