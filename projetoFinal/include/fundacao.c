@@ -1,7 +1,10 @@
 #include "carta.h"
 #include "jogo.h"
 #include "pilha.h"
+#include "tableau.h"
 #include <stdlib.h>
+
+bool precisaDesempilharTableauOrigem(Jogo *jogo, int indexOrigem);
 
 void renderizaCartasFundacao(void *info, void *jogoVar) {
   Carta *carta = (Carta *)info;
@@ -38,8 +41,9 @@ void renderizaFundacao(Jogo *jogo) {
 }
 
 void verificaMovimentoPFundacao(Jogo *jogo, int index) {
+  if (jogo->cartaEmMovimento == NULL) return;
   // Caso a carta venha do estoque
-  if (jogo->cartaEmMovimento && jogo->cartaEmMovimento->posicao == ESTOQUE) {
+  if (isOrigemCartaEstoque(jogo->cartaEmMovimento->posicao)) {
     int numero = 0;
     if (jogo->fundacao[index]->topo) numero = ((Carta *)jogo->fundacao[index]->topo->info)->numero;
 
@@ -63,13 +67,13 @@ void verificaMovimentoPFundacao(Jogo *jogo, int index) {
     jogo->cartaEmMovimento = NULL;
   }
   // Caso a carta venha da fundação
-  if (jogo->cartaEmMovimento && jogo->cartaEmMovimento->posicao == FUNDACAO) {
+  else if (isOrigemCartaFundacao(jogo->cartaEmMovimento->posicao)) {
     // Só troca a pilha se for um As
     if (jogo->cartaEmMovimento->numero != 1) return;
 
     int indexOrigem = (jogo->cartaEmMovimento->posicaoAnterior.x - FUNDACAO_OFFSET_X) / CARTA_LARGURA;
 
-  // Se já tiver uma carta naquela fundacao
+    // Se já tiver uma carta naquela fundacao
 
     if (jogo->fundacao[index]->topo != NULL) return;
 
@@ -87,4 +91,14 @@ void verificaMovimentoPFundacao(Jogo *jogo, int index) {
     // Finaliza o movimento
     jogo->cartaEmMovimento = NULL;
   }
+
+  else if(isOrigemCartaTableau(jogo->cartaEmMovimento->posicao)) {
+    int indexOrigem = (jogo->cartaEmMovimento->posicaoAnterior.x - FUNDACAO_OFFSET_X) / CARTA_LARGURA;
+    if(precisaDesempilharTableauOrigem(jogo, indexOrigem))
+      viraCartaTableauPilhaParaFila(jogo, indexOrigem);
+  }
+}
+
+bool precisaDesempilharTableauOrigem(Jogo *jogo, int indexOrigem) {
+  return jogo->cartaEmMovimento == (Carta *)jogo->filaTableau[indexOrigem]->ini->info;
 }

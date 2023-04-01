@@ -97,3 +97,15 @@ void embaralhaBaralho(ListaGEnc *listaCartas, NodoLGEnc *temp[]){
     temp[i] = t;
   }
 }
+
+bool isOrigemCartaEstoque(EstadosCarta posicaoCarta) {
+  return posicaoCarta == ESTOQUE;
+}
+
+bool isOrigemCartaTableau(EstadosCarta posicaoCarta) {
+  return posicaoCarta == TABLEAU;
+}
+
+bool isOrigemCartaFundacao(EstadosCarta posicaoCarta) {
+  return posicaoCarta == FUNDACAO;
+}

@@ -56,4 +56,8 @@ typedef struct {
 void criaLayoutJogo(Jogo *jogo);
 Vector2 Rectangle2Vector(Rectangle rec);
 
+bool isOrigemCartaEstoque(EstadosCarta posicaoCarta);
+bool isOrigemCartaTableau(EstadosCarta posicaoCarta);
+bool isOrigemCartaFundacao(EstadosCarta posicaoCarta);
+
 #endif

@@ -11,10 +11,6 @@ bool isCorDaCartaProximaDaFila(Carta *cartaEmMovimento, Carta *ultimaCartaColuna
 bool isCartasPretas(Carta *carta);
 bool isProximaDaFila(Carta *cartaEmMovimento, Carta *ultimaCartaColuna);
 bool podePosicionarTableau(Jogo *jogo, int coluna);
-bool isOrigemCartaTableauOuEstoque(EstadosCarta posicaoCarta);
-bool isOrigemCartaEstoque(EstadosCarta posicaoCarta);
-bool isOrigemCartaTableau(EstadosCarta posicaoCarta);
-bool isOrigemCartaFundacao(EstadosCarta posicaoCarta);
 void retiraCartaFundacao(Jogo *jogo);
 
 void renderizaCartasTableau(void *info, void *jogoVar) {
@@ -115,22 +111,6 @@ bool podePosicionarTableau(Jogo *jogo, int coluna) {
   );
 }
 
-bool isOrigemCartaTableauOuEstoque(EstadosCarta posicaoCarta) {
-  return isOrigemCartaEstoque(posicaoCarta) || isOrigemCartaTableau(posicaoCarta);
-}
-
-bool isOrigemCartaEstoque(EstadosCarta posicaoCarta) {
-  return posicaoCarta == ESTOQUE;
-}
-
-bool isOrigemCartaTableau(EstadosCarta posicaoCarta) {
-  return posicaoCarta == TABLEAU;
-}
-
-bool isOrigemCartaFundacao(EstadosCarta posicaoCarta) {
-  return posicaoCarta == FUNDACAO;
-}
-
 void retiraCartaFundacao(Jogo *jogo) {
   for (int i = 0; i < NUM_COLUNAS_FUNDACAO; i++) {
     Rectangle posicaoFundacao = {FUNDACAO_OFFSET_X + (CARTA_LARGURA * i), FUNDACAO_OFFSET_Y, CARTA_LARGURA, CARTA_ALTURA};
@@ -140,4 +120,18 @@ void retiraCartaFundacao(Jogo *jogo) {
       break;
     }
   }
+}
+
+void viraCartaTableauPilhaParaFila(Jogo *jogo, int indexOrigem) {
+  FilaGEnc *filaAux = criaFilaGEnc();
+  Carta *cartaTopo = desempilhaPilhaGEnc(jogo->pilhaTableau[indexOrigem]);
+  cartaTopo->viradaParaBaixo = false;
+  enfileiraFilaGEnc(filaAux, cartaTopo);
+  while(!vaziaFilaGEnc(jogo->filaTableau[indexOrigem])) {
+    enfileiraFilaGEnc(filaAux, desenfileiraFilaGEnc(jogo->filaTableau[indexOrigem]));
+  }
+  while(!vaziaFilaGEnc(filaAux)) {
+    enfileiraFilaGEnc(jogo->filaTableau[indexOrigem], desenfileiraFilaGEnc(filaAux));
+  }
+  destroiFilaGEnc(filaAux);
 }
