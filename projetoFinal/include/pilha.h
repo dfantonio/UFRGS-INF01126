@@ -12,7 +12,7 @@ typedef struct {
   NodoPGEnc *topo;
 } PilhaGEnc;
 
-// Pilha gen�rica
+// Pilha generica
 
 // Funcao que cria uma pilha
 PilhaGEnc *criaPilhaGEnc();

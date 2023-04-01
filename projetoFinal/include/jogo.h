@@ -1,6 +1,7 @@
 #include "carta.h"
-#include "fila.h"
+#include "lista.h"
 #include "pilha.h"
+#include "fila.h"
 #include "raylib.h"
 
 #ifndef _JOGO_H_
@@ -14,7 +15,7 @@
 
 #define TABLEAU_OFFSET_X 230
 #define TABLEAU_OFFSET_Y 215
-#define TABLEAU_OFFSET_DELTA_Y 15
+#define TABLEAU_OFFSET_DELTA_Y 36
 
 #define ESTOQUE_OFFSET \
   CLITERAL(Rectangle) { ESTOQUE_OFFSET_X, ESTOQUE_OFFSET_Y, CARTA_LARGURA, CARTA_ALTURA }
@@ -44,8 +45,8 @@ typedef struct {
   PilhaGEnc *fundacao[4];
 
   // pilha e lista pro tableau
-  PilhaGEnc *tableau[7];
-  Carta *tableauTopo;
+  PilhaGEnc *pilhaTableau[NUM_COLUNAS_TABLEAU];
+  FilaGEnc *filaTableau[NUM_COLUNAS_TABLEAU];
 
   Texturas texturas;
 
