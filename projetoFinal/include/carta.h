@@ -1,5 +1,6 @@
 #include "lista.h"
 #include "raylib.h"
+#include "pilha.h"
 
 #ifndef _CARTA_H_
 #define _CARTA_H_
@@ -31,6 +32,8 @@ typedef struct {
   EstadosCarta posicao;
   Vector2 posicaoAnterior;
 } Carta;
+
+typedef PilhaGEnc PilhaCartas;
 
 // Cria um baralho com as 52 cartas
 ListaGEnc *criaBaralho();
