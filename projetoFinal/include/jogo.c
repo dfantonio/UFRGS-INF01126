@@ -64,7 +64,7 @@ void inicializaListasFilasEPilhas(Jogo *jogo){
   // Inicia todas as listas/pilhas
   jogo->estoque = criaPilhaGEnc();
   jogo->descarte = criaPilhaGEnc();
-  jogo->cartasEmMovimento = criaPilhaGEnc();
+  jogo->cartasEmMovimento = criaFilaGEnc();
 
   int i;
   for (i = 0; i < NUM_COLUNAS_FUNDACAO; i++)
