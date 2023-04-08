@@ -1,10 +1,10 @@
 #include "carta.h"
 #include "estoque.h"
 #include "fundacao.h"
-#include "tableau.h"
 #include "jogo.h"
 #include "raylib.h"
 #include "raymath.h"
+#include "tableau.h"
 #include <stdlib.h>
 
 int main() {
@@ -51,12 +51,21 @@ int main() {
         jogo.cartaEmMovimento->coordsMesa.x = jogo.cartaEmMovimento->posicaoAnterior.x;
         jogo.cartaEmMovimento->coordsMesa.y = jogo.cartaEmMovimento->posicaoAnterior.y;
         jogo.cartaEmMovimento = NULL;
+
+        if (jogo.cartasEmMovimento)
+          while (!vaziaFilaGEnc(jogo.cartasEmMovimento)) {
+            int colunaTableau = (((Carta *)jogo.cartasEmMovimento->ini->info)->coordsMesa.x - TABLEAU_OFFSET.x) / CARTA_LARGURA;
+            Carta *asd = desenfileiraFilaGEnc(jogo.cartasEmMovimento);
+
+            // enfileiraFilaGEnc(jogo.filaTableau[colunaTableau], desenfileiraFilaGEnc(jogo.cartasEmMovimento));
+            enfileiraFilaGEnc(jogo.filaTableau[colunaTableau], asd);
+          }
       }
       jogo.mouseOffset = Vector2Zero();
     }
 
     if (jogo.cartaEmMovimento) {
-      if (jogo.mouseOffset.x == 0) { // Se não houver nenhum offset pro mouse signica que é o primeiro clique detectado
+      if (jogo.mouseOffset.x == 0) { // Se nao houver nenhum offset pro mouse signica que eh o primeiro clique detectado
         jogo.mouseOffset.x = GetMouseX() - jogo.cartaEmMovimento->coordsMesa.x;
         jogo.mouseOffset.y = GetMouseY() - jogo.cartaEmMovimento->coordsMesa.y;
       }
