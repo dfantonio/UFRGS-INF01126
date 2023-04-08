@@ -1,3 +1,4 @@
+#include "fila.h"
 #include "lista.h"
 #include "raylib.h"
 
@@ -31,6 +32,9 @@ typedef struct {
   EstadosCarta posicao;
   Vector2 posicaoAnterior;
 } Carta;
+
+// TODO: Acho que não precisa fazer isso aqui
+typedef FilaGEnc FilaCartas;
 
 // Cria um baralho com as 52 cartas
 ListaGEnc *criaBaralho();

@@ -51,6 +51,7 @@ typedef struct {
   Texturas texturas;
 
   Carta *cartaEmMovimento;
+  FilaCartas *cartasEmMovimento;
 } Jogo;
 
 void criaLayoutJogo(Jogo *jogo);

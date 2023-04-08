@@ -1,18 +1,19 @@
 #ifndef _FILA_H_
 #define _FILA_H_
+#include <stdbool.h>
 
 typedef struct nodoFEnc {
   void *info;
   struct nodoFEnc *prox;
 } NodoFEnc;
 
-typedef struct FilaGEnc{
-   NodoFEnc *ini;
-   NodoFEnc *fim;
+typedef struct FilaGEnc {
+  NodoFEnc *ini;
+  NodoFEnc *fim;
 } FilaGEnc;
 
 // Funcao que cria uma fila
-FilaGEnc* criaFilaGEnc();
+FilaGEnc *criaFilaGEnc();
 
 // Funcao que destroi uma fila
 void destroiFilaGEnc(FilaGEnc *fila);
@@ -26,7 +27,9 @@ void *desenfileiraFilaGEnc(FilaGEnc *fila);
 void percorreFilaGEnc(FilaGEnc *fila, void (*cb)(void *, void *), void *jogo);
 
 // Funcao que determina se uma fila eh vazia
-int vaziaFilaGEnc(FilaGEnc* fila);
+int vaziaFilaGEnc(FilaGEnc *fila);
 
+// Percorre a lista ao contrário
+void *percorreFilaReversoGEnc(FilaGEnc *fila, bool (*cb)(void *, void *), void *jogo);
 
 #endif

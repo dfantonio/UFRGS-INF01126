@@ -5,6 +5,6 @@
 
 void renderizaTableau(Jogo *jogo);
 void verificaMovimentoPTableau(Jogo *jogo, int index);
-void viraCartaTableauPilhaParaFila(Jogo *jogo, int indexOrigem);
+void viraCartaTableauPilhaParaFilaSeNecessario(Jogo *jogo, int indexOrigem);
 
 #endif
