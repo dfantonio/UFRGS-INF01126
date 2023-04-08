@@ -48,10 +48,12 @@ void renderizaFundacao(Jogo *jogo) {
 
 void verificaMovimentoPFundacao(Jogo *jogo, int indexDestino) {
   if (jogo->cartaEmMovimento == NULL) return;
-  if(!podePosicionarFundacao(jogo, indexDestino)) return;
+  if (!podePosicionarFundacao(jogo, indexDestino)) return;
 
-  int indexOrigem = (jogo->cartaEmMovimento->posicaoAnterior.x - FUNDACAO_OFFSET_X) / CARTA_LARGURA;
-  if(isOrigemCartaTableau(jogo->cartaEmMovimento->posicao) && !isFilaComApenasUmaCarta(jogo->filaTableau[indexOrigem])) return;
+  int colunaFundacaoOrigem = (jogo->cartaEmMovimento->posicaoAnterior.x - FUNDACAO_OFFSET_X) / CARTA_LARGURA;
+  int colunaTableauOrigem = (jogo->cartaEmMovimento->posicaoAnterior.x - TABLEAU_OFFSET.x) / CARTA_LARGURA;
+
+  if (isOrigemCartaTableau(jogo->cartaEmMovimento->posicao) && !isFilaComApenasUmaCarta(jogo->cartasEmMovimento)) return;
   // Move a carta pra pilha da fundacao
   empilhaPilhaGEnc(jogo->fundacao[indexDestino], jogo->cartaEmMovimento);
 
@@ -59,17 +61,16 @@ void verificaMovimentoPFundacao(Jogo *jogo, int indexDestino) {
   jogo->cartaEmMovimento->coordsMesa.x = FUNDACAO_OFFSET_X + (CARTA_LARGURA * indexDestino);
   jogo->cartaEmMovimento->coordsMesa.y = FUNDACAO_OFFSET_Y;
 
-  if(isOrigemCartaEstoque(jogo->cartaEmMovimento->posicao)) // Remove a carta da pilha do estoque
+  if (isOrigemCartaEstoque(jogo->cartaEmMovimento->posicao)) // Remove a carta da pilha do estoque
     desempilhaPilhaGEnc(jogo->descarte);
-  else {
-    if (isOrigemCartaFundacao(jogo->cartaEmMovimento->posicao)) // Remove a carta da fundacao antiga
-      desempilhaPilhaGEnc(jogo->fundacao[indexOrigem]);
-    else if(isOrigemCartaTableau(jogo->cartaEmMovimento->posicao)) {
-      jogo->cartaEmMovimento->posicao = FUNDACAO;
-      desenfileiraFilaGEnc(jogo->filaTableau[indexOrigem]);
-      viraCartaTableauPilhaParaFilaSeNecessario(jogo, indexOrigem);
-    }
+  else if (isOrigemCartaFundacao(jogo->cartaEmMovimento->posicao)) // Remove a carta da fundacao antiga
+    desempilhaPilhaGEnc(jogo->fundacao[colunaFundacaoOrigem]);
+  else if (isOrigemCartaTableau(jogo->cartaEmMovimento->posicao)) {
+    jogo->cartaEmMovimento->posicao = FUNDACAO;
+    viraCartaTableauPilhaParaFilaSeNecessario(jogo, colunaTableauOrigem);
+    desenfileiraFilaGEnc(jogo->cartasEmMovimento);
   }
+
   jogo->cartaEmMovimento->posicao = FUNDACAO;
 
   // Finaliza o movimento
@@ -79,12 +80,11 @@ void verificaMovimentoPFundacao(Jogo *jogo, int indexDestino) {
 bool podePosicionarFundacao(Jogo *jogo, int index) {
   Carta *cartaEmMovimento = jogo->cartaEmMovimento;
   Carta *ultimaCartaFundacao = NULL;
-  if(jogo->fundacao[index]->topo)
+  if (jogo->fundacao[index]->topo)
     ultimaCartaFundacao = (Carta *)jogo->fundacao[index]->topo->info;
   return (
-    (vaziaPilhaGEnc(jogo->fundacao[index]) && isUm(jogo->cartaEmMovimento->numero)) || 
-    (isProximaDaPilha(cartaEmMovimento, ultimaCartaFundacao))
-  );
+      (vaziaPilhaGEnc(jogo->fundacao[index]) && isUm(jogo->cartaEmMovimento->numero)) ||
+      (isProximaDaPilha(cartaEmMovimento, ultimaCartaFundacao)));
 }
 
 bool isUm(int numeroCarta) {
@@ -93,7 +93,7 @@ bool isUm(int numeroCarta) {
 
 bool isNumeroDaCartaProximoDaPilha(Carta *cartaEmMovimento, Carta *ultimaCartaPilha) {
   int numUltimaCartaPilha = 0;
-  if (ultimaCartaPilha) 
+  if (ultimaCartaPilha)
     numUltimaCartaPilha = ultimaCartaPilha->numero;
   return cartaEmMovimento->numero == (numUltimaCartaPilha + 1);
 }
@@ -104,12 +104,9 @@ bool isMesmoNaipe(Carta *cartaEmMovimento, Carta *ultimaCartaPilha) {
 
 bool isProximaDaPilha(Carta *cartaEmMovimento, Carta *ultimaCartaPilha) {
   return (
-    isNumeroDaCartaProximoDaPilha(cartaEmMovimento, ultimaCartaPilha) && isMesmoNaipe(cartaEmMovimento, ultimaCartaPilha)
-  ); 
+      isNumeroDaCartaProximoDaPilha(cartaEmMovimento, ultimaCartaPilha) && isMesmoNaipe(cartaEmMovimento, ultimaCartaPilha));
 }
 
 bool isFilaComApenasUmaCarta(FilaGEnc *fila) {
-   return fila->ini->info == fila->fim->info;
+  return fila->ini->info == fila->fim->info;
 }
-
-  

@@ -15,3 +15,6 @@ Estoque -> Pilha circular com as cartas. Ao chegar no final deve subtrair a pont
 TODO:
 Codar as funções de destruir estruturas
 no final do projeto descarregar todas as texturas
+
+BUGS:
+ao mover do estoque pro tableau com um movimento invalido, não tá limpando a lista cartasEmMovimento
