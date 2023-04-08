@@ -1,7 +1,7 @@
 #include "carta.h"
+#include "fila.h"
 #include "lista.h"
 #include "pilha.h"
-#include "fila.h"
 #include "raylib.h"
 
 #ifndef _JOGO_H_
@@ -13,8 +13,8 @@
 #define ESTOQUE_OFFSET_X 0
 #define ESTOQUE_OFFSET_Y 10
 
-#define TABLEAU_OFFSET_X 230
-#define TABLEAU_OFFSET_Y 215
+#define TABLEAU_OFFSET_X       230
+#define TABLEAU_OFFSET_Y       215
 #define TABLEAU_OFFSET_DELTA_Y 36
 
 #define ESTOQUE_OFFSET \
@@ -23,7 +23,7 @@
 #define TABLEAU_OFFSET \
   CLITERAL(Rectangle) { TABLEAU_OFFSET_X, TABLEAU_OFFSET_Y, CARTA_LARGURA, CARTA_ALTURA }
 
-#define NUM_COLUNAS_TABLEAU 7
+#define NUM_COLUNAS_TABLEAU  7
 #define NUM_COLUNAS_FUNDACAO 4
 
 typedef struct {
@@ -50,7 +50,6 @@ typedef struct {
 
   Texturas texturas;
 
-  Carta *cartaEmMovimento;
   FilaCartas *cartasEmMovimento;
 } Jogo;
 
@@ -60,5 +59,8 @@ Vector2 Rectangle2Vector(Rectangle rec);
 bool isOrigemCartaEstoque(EstadosCarta posicaoCarta);
 bool isOrigemCartaTableau(EstadosCarta posicaoCarta);
 bool isOrigemCartaFundacao(EstadosCarta posicaoCarta);
+
+// Retorna um ponteiro para o começo da lista de cartas em movimento ou nulo
+Carta *inicioListaMovimento(Jogo *jogo);
 
 #endif

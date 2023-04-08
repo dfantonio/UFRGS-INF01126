@@ -18,7 +18,7 @@ void renderizaCartasTableau(void *info, void *jogoVar) {
   Jogo *jogo = (Jogo *)jogoVar;
 
   // Caso a carta renderizada nao seja a que esta em movimento
-  if (vaziaFilaGEnc(jogo->cartasEmMovimento) || jogo->cartasEmMovimento->ini->info != carta)
+  if (vaziaFilaGEnc(jogo->cartasEmMovimento) || inicioListaMovimento(&jogo) != carta)
     renderizaCarta(info, jogoVar);
 }
 
@@ -70,23 +70,22 @@ void renderizaTableau(Jogo *jogo) {
 }
 
 void verificaMovimentoPTableau(Jogo *jogo, int indexDestino) {
-  // TODO: Remover essa gambiarra quando migrarmos tudo pra cartasEmMovimento e removermos o cartaEmMovimento
-  if (jogo->cartaEmMovimento) enfileiraFilaGEnc(jogo->cartasEmMovimento, jogo->cartaEmMovimento);
-
   if (vaziaFilaGEnc(jogo->cartasEmMovimento)) return;
   if (!podePosicionarTableau(jogo, indexDestino)) return;
 
-  Carta *cartaMovimento = jogo->cartasEmMovimento->ini->info;
+  Carta *cartaMovimento = inicioListaMovimento(jogo);
 
   // inicializa coordenadas
   int xTableau = indexDestino * CARTA_LARGURA + TABLEAU_OFFSET.x;
   int yTableau = TABLEAU_OFFSET_Y;
-  Carta *ultimaCartaColuna = (Carta *)jogo->filaTableau[indexDestino]->fim->info;
 
-  if (isProximaDaFila(jogo->cartasEmMovimento->ini->info, ultimaCartaColuna)) {
-    // Arruma as informacoes de posicao da carta
-    xTableau = ultimaCartaColuna->coordsMesa.x;
-    yTableau = ultimaCartaColuna->coordsMesa.y + TABLEAU_OFFSET_DELTA_Y;
+  if (!isRei(cartaMovimento->numero)) {
+    Carta *ultimaCartaColuna = (Carta *)jogo->filaTableau[indexDestino]->fim->info;
+    if (isProximaDaFila(inicioListaMovimento(&jogo), ultimaCartaColuna)) {
+      // Arruma as informacoes de posicao da carta
+      xTableau = ultimaCartaColuna->coordsMesa.x;
+      yTableau = ultimaCartaColuna->coordsMesa.y + TABLEAU_OFFSET_DELTA_Y;
+    }
   }
 
   // Move a carta pra fila do tableau
@@ -95,18 +94,16 @@ void verificaMovimentoPTableau(Jogo *jogo, int indexDestino) {
   cartaMovimento->coordsMesa.y = yTableau;
 
   EstadosCarta posicaoDeOrigem = cartaMovimento->posicao;
-  if (isOrigemCartaEstoque(posicaoDeOrigem))
-    desempilhaPilhaGEnc(jogo->descarte);
-  else if (isOrigemCartaFundacao(posicaoDeOrigem))
+  if (isOrigemCartaFundacao(posicaoDeOrigem))
     retiraCartaFundacao(jogo);
   else if (isOrigemCartaTableau(posicaoDeOrigem)) {
     int indexOrigem = (cartaMovimento->posicaoAnterior.x - TABLEAU_OFFSET_X) / CARTA_LARGURA;
     cartaMovimento->posicao = TABLEAU;
     viraCartaTableauPilhaParaFilaSeNecessario(jogo, indexOrigem);
   }
-  cartaMovimento->posicao = TABLEAU;
+
   // Finaliza o movimento
-  jogo->cartaEmMovimento = NULL;
+  cartaMovimento->posicao = TABLEAU;
   desenfileiraFilaGEnc(jogo->cartasEmMovimento);
   while (!vaziaFilaGEnc(jogo->cartasEmMovimento))
     verificaMovimentoPTableau(jogo, indexDestino);
@@ -140,19 +137,20 @@ bool isProximaDaFila(Carta *cartaEmMovimento, Carta *ultimaCartaColuna) {
 // Quando uma coluna estiver vazia, eh permitido comecar a monta-la colocando um rei (K)
 // de qualquer naipe em sua casa OU a carta eh a proxima da fila
 bool podePosicionarTableau(Jogo *jogo, int coluna) {
+  if (vaziaPilhaGEnc(jogo->pilhaTableau[coluna]) && isRei(inicioListaMovimento(jogo)->numero)) return true;
+
   if (!jogo->filaTableau[coluna]->fim) return false;
 
-  Carta *cartaEmMovimento = jogo->cartasEmMovimento->ini->info;
+  Carta *cartaEmMovimento = inicioListaMovimento(jogo);
   Carta *ultimaCartaColuna = (Carta *)jogo->filaTableau[coluna]->fim->info;
-  return (
-      (vaziaPilhaGEnc(jogo->pilhaTableau[coluna]) && isRei(((Carta *)jogo->cartasEmMovimento->ini->info)->numero)) ||
-      (isProximaDaFila(cartaEmMovimento, ultimaCartaColuna)));
+  return isProximaDaFila(cartaEmMovimento, ultimaCartaColuna);
 }
 
 void retiraCartaFundacao(Jogo *jogo) {
   for (int i = 0; i < NUM_COLUNAS_FUNDACAO; i++) {
     Rectangle posicaoFundacao = {FUNDACAO_OFFSET_X + (CARTA_LARGURA * i), FUNDACAO_OFFSET_Y, CARTA_LARGURA, CARTA_ALTURA};
-    Rectangle posicaoAnteriorCarta = {((Carta *)jogo->cartasEmMovimento->ini->info)->posicaoAnterior.x, ((Carta *)jogo->cartasEmMovimento->ini->info)->posicaoAnterior.y, CARTA_LARGURA, CARTA_ALTURA};
+    Carta *carta = inicioListaMovimento(&jogo);
+    Rectangle posicaoAnteriorCarta = {carta->posicaoAnterior.x, carta->posicaoAnterior.y, CARTA_LARGURA, CARTA_ALTURA};
     if (CheckCollisionRecs(posicaoAnteriorCarta, posicaoFundacao)) {
       desempilhaPilhaGEnc(jogo->fundacao[i]);
       break;
