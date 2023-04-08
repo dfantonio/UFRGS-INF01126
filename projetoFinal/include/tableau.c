@@ -12,13 +12,14 @@ bool isCartasPretas(Carta *carta);
 bool isProximaDaFila(Carta *cartaEmMovimento, Carta *ultimaCartaColuna);
 bool podePosicionarTableau(Jogo *jogo, int coluna);
 void retiraCartaFundacao(Jogo *jogo);
+int calculaIndiceTableau(Carta *carta);
 
 void renderizaCartasTableau(void *info, void *jogoVar) {
   Carta *carta = (Carta *)info;
   Jogo *jogo = (Jogo *)jogoVar;
 
   // Caso a carta renderizada nao seja a que esta em movimento
-  if (vaziaFilaGEnc(jogo->cartasEmMovimento) || inicioListaMovimento(&jogo) != carta)
+  if (vaziaFilaGEnc(jogo->cartasEmMovimento) || inicioListaMovimento(jogo) != carta)
     renderizaCarta(info, jogoVar);
 }
 
@@ -81,7 +82,7 @@ void verificaMovimentoPTableau(Jogo *jogo, int indexDestino) {
 
   if (!isRei(cartaMovimento->numero)) {
     Carta *ultimaCartaColuna = (Carta *)jogo->filaTableau[indexDestino]->fim->info;
-    if (isProximaDaFila(inicioListaMovimento(&jogo), ultimaCartaColuna)) {
+    if (isProximaDaFila(inicioListaMovimento(jogo), ultimaCartaColuna)) {
       // Arruma as informacoes de posicao da carta
       xTableau = ultimaCartaColuna->coordsMesa.x;
       yTableau = ultimaCartaColuna->coordsMesa.y + TABLEAU_OFFSET_DELTA_Y;
@@ -97,7 +98,7 @@ void verificaMovimentoPTableau(Jogo *jogo, int indexDestino) {
   if (isOrigemCartaFundacao(posicaoDeOrigem))
     retiraCartaFundacao(jogo);
   else if (isOrigemCartaTableau(posicaoDeOrigem)) {
-    int indexOrigem = (cartaMovimento->posicaoAnterior.x - TABLEAU_OFFSET_X) / CARTA_LARGURA;
+    int indexOrigem = calculaIndiceTableau(cartaMovimento);
     cartaMovimento->posicao = TABLEAU;
     viraCartaTableauPilhaParaFilaSeNecessario(jogo, indexOrigem);
   }
@@ -149,7 +150,7 @@ bool podePosicionarTableau(Jogo *jogo, int coluna) {
 void retiraCartaFundacao(Jogo *jogo) {
   for (int i = 0; i < NUM_COLUNAS_FUNDACAO; i++) {
     Rectangle posicaoFundacao = {FUNDACAO_OFFSET_X + (CARTA_LARGURA * i), FUNDACAO_OFFSET_Y, CARTA_LARGURA, CARTA_ALTURA};
-    Carta *carta = inicioListaMovimento(&jogo);
+    Carta *carta = inicioListaMovimento(jogo);
     Rectangle posicaoAnteriorCarta = {carta->posicaoAnterior.x, carta->posicaoAnterior.y, CARTA_LARGURA, CARTA_ALTURA};
     if (CheckCollisionRecs(posicaoAnteriorCarta, posicaoFundacao)) {
       desempilhaPilhaGEnc(jogo->fundacao[i]);
@@ -164,4 +165,8 @@ void viraCartaTableauPilhaParaFilaSeNecessario(Jogo *jogo, int indexOrigem) {
     cartaTopo->viradaParaBaixo = false;
     enfileiraFilaGEnc(jogo->filaTableau[indexOrigem], cartaTopo);
   }
+}
+
+int calculaIndiceTableau(Carta *carta) {
+  return (carta->posicaoAnterior.x - TABLEAU_OFFSET_X) / CARTA_LARGURA;
 }

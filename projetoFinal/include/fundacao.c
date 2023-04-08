@@ -11,6 +11,7 @@ bool isNumeroDaCartaProximoDaPilha(Carta *cartaEmMovimento, Carta *ultimaCartaPi
 bool isUm(int numeroCarta);
 bool podePosicionarFundacao(Jogo *jogo, int index);
 bool isFilaComApenasUmaCarta(FilaGEnc *fila);
+int calculaIndiceFundacao(Carta *carta);
 
 void renderizaCartasFundacao(void *info, void *jogoVar) {
   Carta *carta = (Carta *)info;
@@ -53,7 +54,7 @@ void verificaMovimentoPFundacao(Jogo *jogo, int indexDestino) {
 
   Carta *carta = inicioListaMovimento(jogo);
 
-  int colunaFundacaoOrigem = (carta->posicaoAnterior.x - FUNDACAO_OFFSET_X) / CARTA_LARGURA;
+  int colunaFundacaoOrigem = calculaIndiceFundacao(carta);
   int colunaTableauOrigem = (carta->posicaoAnterior.x - TABLEAU_OFFSET.x) / CARTA_LARGURA;
 
   if (isOrigemCartaTableau(carta->posicao) && !isFilaComApenasUmaCarta(jogo->cartasEmMovimento)) return;
@@ -106,4 +107,8 @@ bool isProximaDaPilha(Carta *cartaEmMovimento, Carta *ultimaCartaPilha) {
 
 bool isFilaComApenasUmaCarta(FilaGEnc *fila) {
   return fila->ini->info == fila->fim->info;
+}
+
+int calculaIndiceFundacao(Carta *carta) {
+  return (carta->posicaoAnterior.x - FUNDACAO_OFFSET_X) / CARTA_LARGURA;
 }

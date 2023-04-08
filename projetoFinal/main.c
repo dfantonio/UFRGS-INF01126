@@ -63,14 +63,15 @@ int main() {
       // Caso nao tenha acontecido nenhuma movimentacao, retorna a carta pra sua posicao original
       while (!vaziaFilaGEnc(jogo.cartasEmMovimento)) {
         Carta *cartaTemp = desenfileiraFilaGEnc(jogo.cartasEmMovimento);
-        int colunaTableau = (cartaTemp->posicaoAnterior.x - TABLEAU_OFFSET.x) / CARTA_LARGURA;
+        int colunaTableau = calculaIndiceTableau(cartaTemp);
+        int colunaFundacao = calculaIndiceFundacao(cartaTemp);
 
         cartaTemp->coordsMesa.x = cartaTemp->posicaoAnterior.x;
         cartaTemp->coordsMesa.y = cartaTemp->posicaoAnterior.y;
 
         switch (cartaTemp->posicao) {
         case FUNDACAO:
-          // empilhaPilhaGEnc(jogo.fundacao, cartaTemp);
+          empilhaPilhaGEnc(jogo.fundacao[colunaFundacao], cartaTemp);
           break;
 
         case TABLEAU:
