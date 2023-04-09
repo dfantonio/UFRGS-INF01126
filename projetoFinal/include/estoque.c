@@ -8,8 +8,8 @@ void renderizaCartasEstoque(void *info, void *jogoVar) {
   Carta *carta = (Carta *)info;
   Jogo *jogo = (Jogo *)jogoVar;
 
-  // Caso a carta renderizada não seja a que está em movimento
-  if (jogo->cartaEmMovimento != carta)
+  // Caso a carta renderizada nao seja a que esta em movimento
+  if (inicioListaMovimento(jogo) != carta)
     renderizaCarta(info, jogoVar);
 
   if (carta->viradaParaBaixo)
@@ -51,9 +51,11 @@ void renderizaEstoque(Jogo *jogo) {
 
   // Verifica o clique pra arrastar alguma carta da pilha de descarte
   if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && jogo->descarteTopo && CheckCollisionPointRec(mousePos, jogo->descarteTopo->coordsMesa)) {
-    if (jogo->cartaEmMovimento == NULL) {
-      jogo->cartaEmMovimento = jogo->descarteTopo;
-      jogo->cartaEmMovimento->posicaoAnterior = Rectangle2Vector(jogo->cartaEmMovimento->coordsMesa);
+    if (!inicioListaMovimento(jogo)) {
+      enfileiraFilaGEnc(jogo->cartasEmMovimento, jogo->descarteTopo);
+      desempilhaPilhaGEnc(jogo->descarte);
+      Carta *topo = inicioListaMovimento(jogo);
+      topo->posicaoAnterior = Rectangle2Vector(topo->coordsMesa);
     }
   }
 }

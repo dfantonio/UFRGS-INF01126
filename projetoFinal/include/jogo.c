@@ -75,7 +75,6 @@ void inicializaListasFilasEPilhas(Jogo *jogo) {
 
   jogo->descarteTopo = NULL;
   jogo->estoqueTopo = NULL;
-  jogo->cartaEmMovimento = NULL;
   jogo->mouseOffset.x = 0;
   jogo->mouseOffset.y = 0;
 }
@@ -108,4 +107,9 @@ bool isOrigemCartaTableau(EstadosCarta posicaoCarta) {
 
 bool isOrigemCartaFundacao(EstadosCarta posicaoCarta) {
   return posicaoCarta == FUNDACAO;
+}
+
+Carta *inicioListaMovimento(Jogo *jogo) {
+  if (!jogo->cartasEmMovimento->ini) return NULL;
+  return jogo->cartasEmMovimento->ini->info;
 }

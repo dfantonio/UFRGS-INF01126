@@ -7,4 +7,7 @@ void renderizaTableau(Jogo *jogo);
 void verificaMovimentoPTableau(Jogo *jogo, int index);
 void viraCartaTableauPilhaParaFilaSeNecessario(Jogo *jogo, int indexOrigem);
 
+// Calcula a coluna do tableau de origem da carta
+int calculaIndiceTableau(Carta *carta);
+
 #endif

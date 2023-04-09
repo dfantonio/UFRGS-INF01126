@@ -1,6 +1,6 @@
 #include "carta.h"
-#include "lista.h"
 #include "jogo.h"
+#include "lista.h"
 #include <stdio.h>
 #include <stdlib.h>
 

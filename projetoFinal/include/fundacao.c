@@ -11,6 +11,7 @@ bool isNumeroDaCartaProximoDaPilha(Carta *cartaEmMovimento, Carta *ultimaCartaPi
 bool isUm(int numeroCarta);
 bool podePosicionarFundacao(Jogo *jogo, int index);
 bool isFilaComApenasUmaCarta(FilaGEnc *fila);
+int calculaIndiceFundacao(Carta *carta);
 
 void renderizaCartasFundacao(void *info, void *jogoVar) {
   Carta *carta = (Carta *)info;
@@ -18,7 +19,7 @@ void renderizaCartasFundacao(void *info, void *jogoVar) {
 
   // Caso a carta renderizada nao seja a que esta em movimento
 
-  if (jogo->cartaEmMovimento != carta)
+  if (inicioListaMovimento(jogo) != carta)
     renderizaCarta(info, jogoVar);
 }
 
@@ -35,11 +36,12 @@ void renderizaFundacao(Jogo *jogo) {
     if (jogo->fundacao[i]->topo) {
       Carta *cartaTopo = jogo->fundacao[i]->topo->info;
 
-      // Verifica momento pra trocar uma carta entre as fundacoes
+      // Verifica movimento pra trocar uma carta entre as fundacoes
       if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && cartaTopo && CheckCollisionPointRec(mousePos, cartaTopo->coordsMesa)) {
-        if (jogo->cartaEmMovimento == NULL) {
-          jogo->cartaEmMovimento = cartaTopo;
-          jogo->cartaEmMovimento->posicaoAnterior = Rectangle2Vector(jogo->cartaEmMovimento->coordsMesa);
+        if (!inicioListaMovimento(jogo)) {
+          enfileiraFilaGEnc(jogo->cartasEmMovimento, cartaTopo);
+          Carta *topo = inicioListaMovimento(jogo);
+          topo->posicaoAnterior = Rectangle2Vector(topo->coordsMesa);
         }
       }
     }
@@ -47,44 +49,40 @@ void renderizaFundacao(Jogo *jogo) {
 }
 
 void verificaMovimentoPFundacao(Jogo *jogo, int indexDestino) {
-  if (jogo->cartaEmMovimento == NULL) return;
+  if (!inicioListaMovimento(jogo)) return;
   if (!podePosicionarFundacao(jogo, indexDestino)) return;
 
-  int colunaFundacaoOrigem = (jogo->cartaEmMovimento->posicaoAnterior.x - FUNDACAO_OFFSET_X) / CARTA_LARGURA;
-  int colunaTableauOrigem = (jogo->cartaEmMovimento->posicaoAnterior.x - TABLEAU_OFFSET.x) / CARTA_LARGURA;
+  Carta *carta = inicioListaMovimento(jogo);
 
-  if (isOrigemCartaTableau(jogo->cartaEmMovimento->posicao) && !isFilaComApenasUmaCarta(jogo->cartasEmMovimento)) return;
+  int colunaFundacaoOrigem = calculaIndiceFundacao(carta);
+  int colunaTableauOrigem = (carta->posicaoAnterior.x - TABLEAU_OFFSET.x) / CARTA_LARGURA;
+
+  if (isOrigemCartaTableau(carta->posicao) && !isFilaComApenasUmaCarta(jogo->cartasEmMovimento)) return;
   // Move a carta pra pilha da fundacao
-  empilhaPilhaGEnc(jogo->fundacao[indexDestino], jogo->cartaEmMovimento);
+  empilhaPilhaGEnc(jogo->fundacao[indexDestino], carta);
 
   // Arruma as informacoes de posicao da carta
-  jogo->cartaEmMovimento->coordsMesa.x = FUNDACAO_OFFSET_X + (CARTA_LARGURA * indexDestino);
-  jogo->cartaEmMovimento->coordsMesa.y = FUNDACAO_OFFSET_Y;
+  carta->coordsMesa.x = FUNDACAO_OFFSET_X + (CARTA_LARGURA * indexDestino);
+  carta->coordsMesa.y = FUNDACAO_OFFSET_Y;
 
-  if (isOrigemCartaEstoque(jogo->cartaEmMovimento->posicao)) // Remove a carta da pilha do estoque
-    desempilhaPilhaGEnc(jogo->descarte);
-  else if (isOrigemCartaFundacao(jogo->cartaEmMovimento->posicao)) // Remove a carta da fundacao antiga
+  if (isOrigemCartaFundacao(carta->posicao)) { // Remove a carta da fundacao antiga
     desempilhaPilhaGEnc(jogo->fundacao[colunaFundacaoOrigem]);
-  else if (isOrigemCartaTableau(jogo->cartaEmMovimento->posicao)) {
-    jogo->cartaEmMovimento->posicao = FUNDACAO;
+  } else if (isOrigemCartaTableau(carta->posicao)) {
     viraCartaTableauPilhaParaFilaSeNecessario(jogo, colunaTableauOrigem);
-    desenfileiraFilaGEnc(jogo->cartasEmMovimento);
   }
+  desenfileiraFilaGEnc(jogo->cartasEmMovimento);
 
-  jogo->cartaEmMovimento->posicao = FUNDACAO;
-
-  // Finaliza o movimento
-  jogo->cartaEmMovimento = NULL;
+  carta->posicao = FUNDACAO;
 }
 
 bool podePosicionarFundacao(Jogo *jogo, int index) {
-  Carta *cartaEmMovimento = jogo->cartaEmMovimento;
+  Carta *carta = inicioListaMovimento(jogo);
   Carta *ultimaCartaFundacao = NULL;
   if (jogo->fundacao[index]->topo)
     ultimaCartaFundacao = (Carta *)jogo->fundacao[index]->topo->info;
   return (
-      (vaziaPilhaGEnc(jogo->fundacao[index]) && isUm(jogo->cartaEmMovimento->numero)) ||
-      (isProximaDaPilha(cartaEmMovimento, ultimaCartaFundacao)));
+      (vaziaPilhaGEnc(jogo->fundacao[index]) && isUm(carta->numero)) ||
+      (isProximaDaPilha(carta, ultimaCartaFundacao)));
 }
 
 bool isUm(int numeroCarta) {
@@ -109,4 +107,8 @@ bool isProximaDaPilha(Carta *cartaEmMovimento, Carta *ultimaCartaPilha) {
 
 bool isFilaComApenasUmaCarta(FilaGEnc *fila) {
   return fila->ini->info == fila->fim->info;
+}
+
+int calculaIndiceFundacao(Carta *carta) {
+  return (carta->posicaoAnterior.x - FUNDACAO_OFFSET_X) / CARTA_LARGURA;
 }

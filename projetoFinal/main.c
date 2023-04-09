@@ -32,72 +32,64 @@ int main() {
     renderizaFundacao(&jogo);
     renderizaTableau(&jogo);
 
-    if (IsMouseButtonReleased(MOUSE_LEFT_BUTTON) && (jogo.cartaEmMovimento || jogo.cartasEmMovimento->ini)) {
+    if (IsMouseButtonReleased(MOUSE_LEFT_BUTTON) && inicioListaMovimento(&jogo)) {
+      Carta *origem = inicioListaMovimento(&jogo);
+
       // Deve verificar se a carta em movimento nao ta em cima de nenhum slot do tableau ou fundacao
       for (int i = 0; i < NUM_COLUNAS_FUNDACAO; i++) {
         Rectangle posicaoFundacao = {FUNDACAO_OFFSET_X + (CARTA_LARGURA * i), FUNDACAO_OFFSET_Y, CARTA_LARGURA, CARTA_ALTURA};
-        if (jogo.cartaEmMovimento && CheckCollisionRecs(jogo.cartaEmMovimento->coordsMesa, posicaoFundacao))
+        if (CheckCollisionRecs(origem->coordsMesa, posicaoFundacao)) {
           verificaMovimentoPFundacao(&jogo, i);
-
-        if (jogo.cartasEmMovimento->ini) {
-          Carta *origem = jogo.cartasEmMovimento->ini->info;
-          if (jogo.cartasEmMovimento->ini && CheckCollisionRecs(origem->coordsMesa, posicaoFundacao)) {
-            jogo.cartaEmMovimento = origem;
-            verificaMovimentoPFundacao(&jogo, i);
-          }
         }
       }
 
       for (int i = 0; i < NUM_COLUNAS_TABLEAU; i++) {
-        if (jogo.cartaEmMovimento && jogo.filaTableau[i]->fim && CheckCollisionRecs(((Carta *)jogo.filaTableau[i]->fim->info)->coordsMesa, jogo.cartaEmMovimento->coordsMesa))
-          verificaMovimentoPTableau(&jogo, i);
-
-        if (jogo.cartasEmMovimento->ini && jogo.filaTableau[i]->fim) { // Se tem uma carta em movimento e se há uma carta virara pra cima na coluna desejada
-          Carta *origem = jogo.cartasEmMovimento->ini->info;
+        if (jogo.filaTableau[i]->fim) { // Se ha uma carta virada pra cima na coluna desejada
           Carta *destino = jogo.filaTableau[i]->fim->info;
 
-          if (jogo.cartasEmMovimento->ini && CheckCollisionRecs(destino->coordsMesa, origem->coordsMesa))
+          if (CheckCollisionRecs(destino->coordsMesa, origem->coordsMesa)) // Se houve sobreposicao da carta virada pra cima e da carta em movimento
+            verificaMovimentoPTableau(&jogo, i);
+        } else {
+          Rectangle slot = {
+              TABLEAU_OFFSET_X + (CARTA_LARGURA * i),
+              TABLEAU_OFFSET_Y,
+              CARTA_LARGURA,
+              CARTA_ALTURA};
+          if (CheckCollisionRecs(slot, origem->coordsMesa)) // Se houve sobreposicao da carta virada pra cima e da carta em movimento
             verificaMovimentoPTableau(&jogo, i);
         }
       }
 
       // Caso nao tenha acontecido nenhuma movimentacao, retorna a carta pra sua posicao original
-      if (jogo.cartaEmMovimento) {
-        jogo.cartaEmMovimento->coordsMesa.x = jogo.cartaEmMovimento->posicaoAnterior.x;
-        jogo.cartaEmMovimento->coordsMesa.y = jogo.cartaEmMovimento->posicaoAnterior.y;
-        jogo.cartaEmMovimento = NULL;
-      }
-      // Caso nao tenha acontecido nenhuma movimentacao, retorna a carta pra sua posicao original
-      if (jogo.cartasEmMovimento)
-        while (!vaziaFilaGEnc(jogo.cartasEmMovimento)) {
-          Carta *cartaTemp = desenfileiraFilaGEnc(jogo.cartasEmMovimento);
-          int colunaTableau = (cartaTemp->posicaoAnterior.x - TABLEAU_OFFSET.x) / CARTA_LARGURA;
+      while (!vaziaFilaGEnc(jogo.cartasEmMovimento)) {
+        Carta *cartaTemp = desenfileiraFilaGEnc(jogo.cartasEmMovimento);
+        int colunaTableau = calculaIndiceTableau(cartaTemp);
+        int colunaFundacao = calculaIndiceFundacao(cartaTemp);
 
-          cartaTemp->coordsMesa.x = cartaTemp->posicaoAnterior.x;
-          cartaTemp->coordsMesa.y = cartaTemp->posicaoAnterior.y;
+        cartaTemp->coordsMesa.x = cartaTemp->posicaoAnterior.x;
+        cartaTemp->coordsMesa.y = cartaTemp->posicaoAnterior.y;
 
+        switch (cartaTemp->posicao) {
+        case FUNDACAO:
+          empilhaPilhaGEnc(jogo.fundacao[colunaFundacao], cartaTemp);
+          break;
+
+        case TABLEAU:
           enfileiraFilaGEnc(jogo.filaTableau[colunaTableau], cartaTemp);
+          break;
+
+        case ESTOQUE:
+          empilhaPilhaGEnc(jogo.descarte, cartaTemp);
+          break;
         }
+      }
       jogo.mouseOffset = Vector2Zero();
     }
 
-    // TODO: Remover a lógica de renderizar cartaEmMovimento quando migrarmos tudo pra fila de cartasEmMovimento
-    if (jogo.cartaEmMovimento) {
-      if (jogo.mouseOffset.x == 0) { // Se nao houver nenhum offset pro mouse signica que eh o primeiro clique detectado
-        jogo.mouseOffset.x = GetMouseX() - jogo.cartaEmMovimento->coordsMesa.x;
-        jogo.mouseOffset.y = GetMouseY() - jogo.cartaEmMovimento->coordsMesa.y;
-      }
-      jogo.cartaEmMovimento->coordsMesa.x = GetMouseX() - jogo.mouseOffset.x;
-      jogo.cartaEmMovimento->coordsMesa.y = GetMouseY() - jogo.mouseOffset.y;
-
-      // Renderiza a carta em movimento depois de todas as outras
-      renderizaCarta(jogo.cartaEmMovimento, &jogo);
-    }
-
     // Renderiza a fila de cartas em movimento e atualiza as suas posições
-    if (jogo.cartasEmMovimento->ini) {
+    if (inicioListaMovimento(&jogo)) {
       FilaGEnc *filaAux = criaFilaGEnc();
-      Carta *cartaTemp = jogo.cartasEmMovimento->ini->info;
+      Carta *cartaTemp = inicioListaMovimento(&jogo);
       int i = 0;
 
       if (jogo.mouseOffset.x == 0) { // Se nao houver nenhum offset pro mouse signica que eh o primeiro clique detectado
