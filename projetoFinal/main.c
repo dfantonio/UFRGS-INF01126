@@ -113,8 +113,6 @@ int main() {
       destroiFilaGEnc(filaAux);
     }
 
-    DrawFPS(10, 10);
-
     EndDrawing();
   }
 

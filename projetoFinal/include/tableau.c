@@ -138,7 +138,7 @@ bool isProximaDaFila(Carta *cartaEmMovimento, Carta *ultimaCartaColuna) {
 // Quando uma coluna estiver vazia, eh permitido comecar a monta-la colocando um rei (K)
 // de qualquer naipe em sua casa OU a carta eh a proxima da fila
 bool podePosicionarTableau(Jogo *jogo, int coluna) {
-  if (vaziaFilaGEnc(jogo->filaTableau[coluna]) && isRei(inicioListaMovimento(jogo)->numero)) return true;
+  if (isRei(inicioListaMovimento(jogo)->numero) && vaziaFilaGEnc(jogo->filaTableau[coluna]) && vaziaPilhaGEnc(jogo->pilhaTableau[coluna])) return true;
 
   if (!jogo->filaTableau[coluna]->fim) return false;
 
