@@ -77,6 +77,7 @@ void inicializaListasFilasEPilhas(Jogo *jogo) {
   jogo->estoqueTopo = NULL;
   jogo->mouseOffset.x = 0;
   jogo->mouseOffset.y = 0;
+  jogo->venceu = false;
 }
 
 void embaralhaBaralho(ListaGEnc *listaCartas, NodoLGEnc *temp[]) {
@@ -111,23 +112,18 @@ bool isOrigemCartaFundacao(EstadosCarta posicaoCarta) {
 
 Carta *inicioListaMovimento(Jogo *jogo) {
   if (!jogo->cartasEmMovimento->ini) return NULL;
-return jogo->cartasEmMovimento->ini->info;
+  return jogo->cartasEmMovimento->ini->info;
 }
 
 bool jogadorVenceu(Jogo *jogo) {
-  //para facilitar a verificacao da vitoria
-  // if(!vaziaPilhaGEnc(jogo->fundacao[0]) && ((Carta *)jogo->fundacao[0]->topo->info)->numero == 1 && vaziaFilaGEnc(jogo->cartasEmMovimento))
-  //   return true;
-  for(int i=0; i< NUM_COLUNAS_FUNDACAO; i++){
-    if(vaziaPilhaGEnc(jogo->fundacao[i]) || ((Carta *)jogo->fundacao[i]->topo->info)->numero != 13)
+  for (int i = 0; i < NUM_COLUNAS_FUNDACAO; i++) {
+    if (vaziaPilhaGEnc(jogo->fundacao[i]) || ((Carta *)jogo->fundacao[i]->topo->info)->numero != 13)
       return false;
   }
   return true;
 }
 
-void renderizaVitoria() {
-  Image imagem = LoadImage("resources/vitoria.png");
-  Texture2D textura = LoadTextureFromImage(imagem);
+void renderizaVitoria(Jogo *jogo) {
   ClearBackground(DARKBLUE);
-  DrawTexture(textura, 200, 200, WHITE);
+  DrawTexture(jogo->texturas.texturaVitoria, 200, 100, WHITE);
 }

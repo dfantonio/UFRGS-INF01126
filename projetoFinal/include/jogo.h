@@ -31,6 +31,7 @@ typedef struct {
   Texture2D texturaCartaVerso;
   Texture2D texturaSlot;
   Texture2D texturaEstoque;
+  Texture2D texturaVitoria;
 } Texturas;
 
 typedef struct {
@@ -51,6 +52,8 @@ typedef struct {
   Texturas texturas;
 
   FilaCartas *cartasEmMovimento;
+
+  bool venceu;
 } Jogo;
 
 void criaLayoutJogo(Jogo *jogo);

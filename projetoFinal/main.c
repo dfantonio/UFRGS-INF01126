@@ -2,10 +2,10 @@
 #include "estoque.h"
 #include "fundacao.h"
 #include "jogo.h"
+#include "menu.h"
 #include "raylib.h"
 #include "raymath.h"
 #include "tableau.h"
-#include "menu.h"
 #include <stdlib.h>
 
 int main() {
@@ -14,7 +14,7 @@ int main() {
 
   InitWindow(screenWidth, screenHeight, "Jogo de paciencia");
 
-  SetTargetFPS(60); // Set our game to run at 60 frames-per-second
+  SetTargetFPS(60);
 
   Jogo jogo;
   criaLayoutJogo(&jogo);
@@ -25,18 +25,29 @@ int main() {
   jogo.texturas.texturaCartaVerso = LoadTexture("resources/cardBack.png");
   jogo.texturas.texturaSlot = LoadTexture("resources/cardSlot.png");
   jogo.texturas.texturaEstoque = LoadTexture("resources/cardReload.png");
+  jogo.texturas.texturaVitoria = LoadTexture("resources/vitoria.png");
+
+  InitAudioDevice();
+
+  Music music = LoadMusicStream("resources/musica-vitoria.mp3");
 
   while (!WindowShouldClose()) {
     BeginDrawing();
+    UpdateMusicStream(music);
 
-    if(IsKeyPressed(KEY_SPACE))
+    if (IsKeyPressed(KEY_SPACE) || IsKeyPressed(KEY_ESCAPE))
       menu.isOpen = !menu.isOpen;
-    if(menu.isOpen)
+    if (menu.isOpen) {
       renderizaMenu(&menu, &jogo);
-    else if(jogadorVenceu(&jogo))
-       renderizaVitoria();
-    else {
-      SetExitKey(KEY_ESCAPE);
+    } else if (jogadorVenceu(&jogo)) {
+      if (!jogo.venceu) {
+        SetExitKey(KEY_ESCAPE);
+        PlayMusicStream(music);
+      }
+      jogo.venceu = true;
+      renderizaVitoria(&jogo);
+    } else {
+      SetExitKey(KEY_X);
       ClearBackground(DARKBLUE);
       renderizaEstoque(&jogo);
       renderizaFundacao(&jogo);
