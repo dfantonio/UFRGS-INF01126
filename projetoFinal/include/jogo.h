@@ -60,7 +60,9 @@ bool isOrigemCartaEstoque(EstadosCarta posicaoCarta);
 bool isOrigemCartaTableau(EstadosCarta posicaoCarta);
 bool isOrigemCartaFundacao(EstadosCarta posicaoCarta);
 
-// Retorna um ponteiro para o começo da lista de cartas em movimento ou nulo
+// Retorna um ponteiro para o comeï¿½o da lista de cartas em movimento ou nulo
 Carta *inicioListaMovimento(Jogo *jogo);
+bool jogadorVenceu(Jogo *jogo);
+void renderizaVitoria();
 
 #endif

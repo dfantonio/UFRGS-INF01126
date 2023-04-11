@@ -33,7 +33,9 @@ int main() {
       menu.isOpen = !menu.isOpen;
     if(menu.isOpen)
       renderizaMenu(&menu, &jogo);
-    else{
+    else if(jogadorVenceu(&jogo))
+       renderizaVitoria();
+    else {
       SetExitKey(KEY_ESCAPE);
       ClearBackground(DARKBLUE);
       renderizaEstoque(&jogo);
