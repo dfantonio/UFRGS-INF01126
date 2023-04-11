@@ -33,14 +33,10 @@ typedef struct {
   Vector2 posicaoAnterior;
 } Carta;
 
-// TODO: Acho que não precisa fazer isso aqui
 typedef FilaGEnc FilaCartas;
 
 // Cria um baralho com as 52 cartas
 ListaGEnc *criaBaralho();
-
-// Percorre o baralho
-void percorreBaralho(ListaGEnc *lista);
 
 // Renderiza uma carta
 void renderizaCarta(void *info, void *jogoVar);

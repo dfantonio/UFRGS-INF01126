@@ -31,6 +31,7 @@ typedef struct {
   Texture2D texturaCartaVerso;
   Texture2D texturaSlot;
   Texture2D texturaEstoque;
+  Texture2D texturaVitoria;
 } Texturas;
 
 typedef struct {
@@ -51,6 +52,8 @@ typedef struct {
   Texturas texturas;
 
   FilaCartas *cartasEmMovimento;
+
+  bool venceu;
 } Jogo;
 
 void criaLayoutJogo(Jogo *jogo);
@@ -60,7 +63,9 @@ bool isOrigemCartaEstoque(EstadosCarta posicaoCarta);
 bool isOrigemCartaTableau(EstadosCarta posicaoCarta);
 bool isOrigemCartaFundacao(EstadosCarta posicaoCarta);
 
-// Retorna um ponteiro para o começo da lista de cartas em movimento ou nulo
+// Retorna um ponteiro para o comeï¿½o da lista de cartas em movimento ou nulo
 Carta *inicioListaMovimento(Jogo *jogo);
+bool jogadorVenceu(Jogo *jogo);
+void renderizaVitoria();
 
 #endif

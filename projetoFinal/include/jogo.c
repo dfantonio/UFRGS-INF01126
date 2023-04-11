@@ -77,6 +77,7 @@ void inicializaListasFilasEPilhas(Jogo *jogo) {
   jogo->estoqueTopo = NULL;
   jogo->mouseOffset.x = 0;
   jogo->mouseOffset.y = 0;
+  jogo->venceu = false;
 }
 
 void embaralhaBaralho(ListaGEnc *listaCartas, NodoLGEnc *temp[]) {
@@ -112,4 +113,17 @@ bool isOrigemCartaFundacao(EstadosCarta posicaoCarta) {
 Carta *inicioListaMovimento(Jogo *jogo) {
   if (!jogo->cartasEmMovimento->ini) return NULL;
   return jogo->cartasEmMovimento->ini->info;
+}
+
+bool jogadorVenceu(Jogo *jogo) {
+  for (int i = 0; i < NUM_COLUNAS_FUNDACAO; i++) {
+    if (vaziaPilhaGEnc(jogo->fundacao[i]) || ((Carta *)jogo->fundacao[i]->topo->info)->numero != 13)
+      return false;
+  }
+  return true;
+}
+
+void renderizaVitoria(Jogo *jogo) {
+  ClearBackground(DARKBLUE);
+  DrawTexture(jogo->texturas.texturaVitoria, 200, 100, WHITE);
 }
